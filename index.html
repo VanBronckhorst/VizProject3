@@ -1,0 +1,11 @@
+<html>
+	<head>
+		<script src="js/DataManager.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var dm = new DataManager();
+			dm.nestGet("genre", "list", {}, function(a,b) {console.log(a,b) });
+		</script>
+	</body>
+</html>
