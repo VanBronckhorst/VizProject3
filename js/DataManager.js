@@ -87,5 +87,14 @@ var DataManager = function () {
             // do it
             request.send();
         }
+        
+        this.suggestArtist = function(s,callback,n) {
+	        this.nestGet("artist", "suggest", {name:s,results:n?n:5}, callback)
+        }
+        
+        this.completeProfileFromId = function(id,callback) {
+	        var bucket = [ "genre","images", "artist_location","terms"]
+	        this.nestGet("artist", "profile", {id:id,bucket:bucket}, callback)
+        }
 		
 }

@@ -1,0 +1,16 @@
+.node {
+  
+}
+
+.player1{
+	stroke: aqua;
+	stroke-width: 4px;
+}
+.player2{
+	stroke: red;
+	stroke-width: 4px;
+}
+
+.link {
+  stroke: #999;
+}
