@@ -5,17 +5,22 @@
 	font-size: 4vmin;
 }
 .sugg-results-box{
-	border: black solid 1px;
+	border-bottom: #999 solid 1px;
+	border-left: #999 solid 1px;
+	border-right: #999 solid 1px;
 	overflow: scroll;
+	background-color: white;
+	
 }
 .sugg-result-div{
-	height : 20%;
+	height : 8vmin;
 	text-align: center;
 	font-family: arial;
 /*
 	padding-top: 5px;
 	padding-bottom: 5px;
 */
+	line-height: 8vmin;
 	font-size: 16px; 
 	font-size: 4vmin;
 }

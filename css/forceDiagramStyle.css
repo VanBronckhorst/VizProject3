@@ -3,14 +3,27 @@
 }
 
 .player1{
-	stroke: aqua;
-	stroke-width: 4px;
+	stroke: #779ECB;
+	stroke-width: 8px;
+	fill: #779ECB;
 }
 .player2{
-	stroke: red;
-	stroke-width: 4px;
+	stroke: #C23B22;
+	stroke-width: 8px;
+	fill:#C23B22;
+}
+
+.player1.player2{
+	stroke: url(#both);
+	stroke-width: 8px;
+	fill: url(#both);
 }
 
 .link {
   stroke: #999;
+}
+
+.avatar-text{
+	font-family: arial;
+	font-size: 16px;
 }

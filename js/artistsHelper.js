@@ -19,3 +19,14 @@ function areSimilar(a1,a2) {
 */
 	return false;
 }
+
+var geocoder = new google.maps.Geocoder();
+function geocodeAddress(address,callback) {
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+       callback(results);
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}

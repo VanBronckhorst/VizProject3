@@ -95,6 +95,7 @@ var DataManager = function () {
         this.completeProfileFromId = function(id,callback) {
 	        var bucket = [ "genre","images", "artist_location","terms"]
 	        this.nestGet("artist", "profile", {id:id,bucket:bucket}, callback)
+	        
         }
 		
 }
