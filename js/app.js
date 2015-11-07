@@ -5,6 +5,9 @@
 function init() {
     var dm = new DataManager();
     var fl = new ForceArtistDiagram("#compare-force")
+    var listp1= new SelectedList("#compare-list-p1");
+    var listp2= new SelectedList("#compare-list-p2");
+
     var m = new ArtistMap("#compare-map")
     var m2 = new ArtistMap("#explore-map")
     var auto = new AutoCompleteBox("#autocomplete")
@@ -16,7 +19,8 @@ function init() {
         })
         .selectedFunc(function(id){
             dm.completeProfileFromId(id,function(err,data){
-                fl.addArtist(data["artist"],2);
+                listp1.addArtist(data["artist"])
+                fl.addArtist(data["artist"],1);
                 m.addArtist(data["artist"],1);})
         });
     auto2.searchFunc(function(d){if(d){
@@ -25,8 +29,10 @@ function init() {
         }
         })
         .selectedFunc(function(id){
-            dm.completeProfileFromId(id,function(err,data){fl.addArtist(data["artist"],2);
-                                                            m.addArtist(data["artist"],2);})
+            dm.completeProfileFromId(id,function(err,data){
+                listp2.addArtist(data["artist"])
+                fl.addArtist(data["artist"],2);
+                m.addArtist(data["artist"],2);})
         });
     var transitionDown= function() { d3.select("#main").transition().duration(2000).style("top","-100%")}
     var transitionUp= function() { d3.select("#main").transition().duration(2000).style("top","0")}
