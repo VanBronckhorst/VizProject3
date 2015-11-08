@@ -1,4 +1,6 @@
 var DataManager = function () {
+    //keys: umberto,filippo,X,X,X
+    this.apiKeys = ['CFLBFVAPYPMUYTTSR','QVJX27LZP1Q9GYBYV','45PFVVAQZQJD5BIV5','PKT63BEXLXWEDVVKE','ZTFPNPKXWOQAHAG2G']
 	this.api_key="QVJX27LZP1Q9GYBYV"
 	this.host = "developer.echonest.com";
     this.api_path = "/api/v4/";
