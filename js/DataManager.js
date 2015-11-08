@@ -1,7 +1,6 @@
 var DataManager = function () {
     //keys: umberto,filippo,X,X,X
     this.apiKeys = ['CFLBFVAPYPMUYTTSR','QVJX27LZP1Q9GYBYV','45PFVVAQZQJD5BIV5','PKT63BEXLXWEDVVKE','ZTFPNPKXWOQAHAG2G']
-	this.api_key="QVJX27LZP1Q9GYBYV"
 	this.host = "developer.echonest.com";
     this.api_path = "/api/v4/";
 	
@@ -52,7 +51,11 @@ var DataManager = function () {
     }
 	
 	this.nestGet = function (category, method, query, callback) {
-            query.api_key = this.api_key;
+            //pick first key
+            query.api_key = this.apiKeys[0]; 
+            //rotate api key
+            this.apiKeys.unshift(this.apiKeys.pop()); 
+
             query.format = 'json';
             var request = new XMLHttpRequest();
             var url = 'http://';
@@ -90,11 +93,11 @@ var DataManager = function () {
             request.send();
         }
         
-        this.suggestArtist = function(s,callback,n) {
+        this.suggestArtist = function(s,callback,n) {           
 	        this.nestGet("artist", "suggest", {name:s,results:n?n:5}, callback)
         }
         
-        this.completeProfileFromId = function(id,callback) {
+        this.completeProfileFromId = function(id,callback) {            
 	        var bucket = [ "genre","images", "artist_location","terms"]
 	        this.nestGet("artist", "profile", {id:id,bucket:bucket}, callback)
 	        
