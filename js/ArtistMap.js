@@ -2,7 +2,7 @@ var ArtistMap = function (where){
 	var that=this;
 	//INIT SECTION - Initiate the DIV for the map
 	this.mapId = "map"+ parseInt(Math.random()*10000);
-	d3.select(where).append("div").attr("id",this.mapId).attr("class","map-div");
+	this.mapDiv = d3.select(where).append("div").attr("id",this.mapId).attr("class","map-div");
 	this.observers = [];
 	
 	this.addObserver = function(obs){
@@ -42,9 +42,15 @@ var ArtistMap = function (where){
 	//INITIATE THE MAP	
 	this.map = L.map(this.mapId,{layers: [this.darkTile],
 								doubleClickZoom: false,
-								markerZoomAnimation: false
-					}).setView([28.0, -50.0], 3);		
+								markerZoomAnimation: false,
+								scrollWheelZoom: 'center'
+					}).setView([28.0, -50.0], 5);
 	L.control.layers(this.baseMaps,null,{position:"topleft"}).addTo(this.map);
+
+	this.mapDiv.on("click", function() {
+											window.dispatchEvent(new Event('resize'));
+
+											})
 
 
 }
