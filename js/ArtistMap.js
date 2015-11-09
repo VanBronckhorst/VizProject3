@@ -12,10 +12,10 @@ var ArtistMap = function (where){
 	//TILES CREATION	
 	
 	
-	this.pirateTile= L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+	this.outdoorTile= L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 	    maxZoom: 18,
-	    id: 'vanbronckhorst.nm2ecd0l',
+	    id: 'vanbronckhorst.o4bl4n7b',
 	    accessToken: 'pk.eyJ1IjoidmFuYnJvbmNraG9yc3QiLCJhIjoiYjgyYTRhNjY0YzYxNDQ2ZWUzN2U5ZGFjNWFmMDI4OGYifQ.KUupQiTEuAkdC-WJgXZ7kA'
 	})
 	
@@ -37,11 +37,11 @@ var ArtistMap = function (where){
 	this.baseMaps = {
     "<g class = 'control-layer-text'>Geo Map</g>": this.geoTile,
     "<g class = 'control-layer-text'>Dark Map</g>": this.darkTile,
-    "<g class = 'control-layer-text'>Pirates ;)</g>":this.pirateTile
+    "<g class = 'control-layer-text'>Outdoor</g>":this.outdoorTile
 	};	
 	
 	//INITIATE THE MAP	
-	this.map = L.map(this.mapId,{layers: [this.darkTile],
+	this.map = L.map(this.mapId,{layers: [this.outdoorTile],
 								doubleClickZoom: false,
 								markerZoomAnimation: false,
 								scrollWheelZoom: 'center'
