@@ -31,7 +31,6 @@ SelectedList.prototype.rearrange = function() {
 }
 
 SelectedList.prototype.removeArtist = function(id) {
-    console.log(this.elems)
     for (var i in this.elems) {
         var el = this.elems[i];
         if (el.artistId == id){
@@ -47,6 +46,7 @@ SelectedList.prototype.removeArtist = function(id) {
 }
 
 SelectedList.prototype.addArtist = function(artist) {
+
     var el = this.listBox.append("div").attr("class","selected-list-element")
     el.artistId = artist.id
     var newEl = new SelectedElement(el,artist,this)

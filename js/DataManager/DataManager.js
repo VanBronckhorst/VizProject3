@@ -63,6 +63,7 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 	if ( this.searchedArtists[ id ] ) {
 		console.log( 'Retrieve cached artist' );
 		callback( null, this.searchedArtists[ id ] );
+		return;
 	}
 
 	var artist = new Artist();

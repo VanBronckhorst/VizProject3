@@ -36,6 +36,7 @@ function init() {
         })
         .selectedFunc(function(id){
             dm.artistFromId(id,function(err,data){
+                console.log("added")
                 listp2.addArtist(data);
                 suggp2.addArtist(data);
                 fl.addArtist(data,2);
@@ -43,12 +44,17 @@ function init() {
         });
 
     // functions for the selected list
-    var removerFunction = function(id) {
-        m.removeArtist(id);
+    var removerFunction = function(id,player) {
+        m.removeArtist(id,player);
+        fl.removeArtist({id:id},player);
     }
 
-    listp1.onClick(removerFunction);
-    listp2.onClick(removerFunction);
+    listp1.onClick(function (id) {
+        removerFunction(id,1)
+    });
+    listp2.onClick(function (id) {
+        removerFunction(id,2)
+    });
 
     // functions for the suggested list
     var adderFunction = function(artist,player) {
