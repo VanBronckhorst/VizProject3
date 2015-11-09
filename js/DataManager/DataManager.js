@@ -63,6 +63,7 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 	if ( this.searchedArtists[ id ] ) {
 		console.log( 'Retrieve cached artist' );
 		callback( null, this.searchedArtists[ id ] );
+		return;
 	}
 
 	var artist = new Artist();
@@ -88,11 +89,12 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 					that.chosenArtists.push( artist );
 					// Cache artist
 					that.searchedArtists[ artist.id ] = artist;
+					callback( null, artist );
 				} )
-				.then( function () {
-					//console.log(artist.getPopularityOverTime());
-				}) 
-				.then( function () {
+				.catch( function ( err ) {
+					that.chosenArtists.push( artist );
+					// Cache artist
+					that.searchedArtists[ artist.id ] = artist;
 					callback( null, artist );
 				} );
 			} );

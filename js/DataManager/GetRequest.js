@@ -18,7 +18,7 @@ httpGet = function ( url ) {
                 
                 resolve( response );
             } else {
-                reject ( request.status );
+                reject( request.status );
             }
         };
         request.onerror = function () {
