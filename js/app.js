@@ -23,11 +23,11 @@ function init() {
         }
         })
         .selectedFunc(function(id){
-            dm.completeProfileFromId(id,function(err,data){
-                listp1.addArtist(data["artist"]);
-                suggp1.addArtist(data["artist"]);
-                fl.addArtist(data["artist"],1);
-                m.addArtist(data["artist"],1);})
+            dm.artistFromId(id,function(err,data){
+                listp1.addArtist(data);
+                suggp1.addArtist(data);
+                fl.addArtist(data,1);
+                m.addArtist(data,1);})
         });
     auto2.searchFunc(function(d){if(d){
             dm.suggestArtist(d,function(err,data){if(!err){	//console.log(data);
@@ -35,11 +35,11 @@ function init() {
         }
         })
         .selectedFunc(function(id){
-            dm.completeProfileFromId(id,function(err,data){
-                listp2.addArtist(data["artist"]);
-                suggp2.addArtist(data["artist"]);
-                fl.addArtist(data["artist"],2);
-                m.addArtist(data["artist"],2);})
+            dm.artistFromId(id,function(err,data){
+                listp2.addArtist(data);
+                suggp2.addArtist(data);
+                fl.addArtist(data,2);
+                m.addArtist(data,2);})
         });
 
     // functions for the selected list
@@ -52,14 +52,14 @@ function init() {
 
     // functions for the suggested list
     var adderFunction = function(artist,player) {
-        dm.completeProfileFromId(artist["id"],function(err,data){
+        dm.completeProfileFromId(artist,function(err,data){
             var list = player==2?listp2:listp1;
             var sugg = player==2?suggp2:suggp1;
 
-            list.addArtist(data["artist"]);
-            sugg.addArtist(data["artist"]);
-            fl.addArtist(data["artist"],player);
-            m.addArtist(data["artist"],player);
+            list.addArtist(data);
+            sugg.addArtist(data);
+            fl.addArtist(data,player);
+            m.addArtist(data,player);
 
         })
     }

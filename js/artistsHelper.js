@@ -1,8 +1,8 @@
 function areSimilar(a1,a2) {
-	for (i in a1["genres"]) {
-		var g = a1["genres"][i]["name"]
-		for (j in a2["genres"]) {
-			if (a2["genres"][j]["name"]==g){
+	for (i in a1.genres) {
+		var g = a1.genres[i]["name"]
+		for (j in a2.genres) {
+			if (a2.genres[j]["name"]==g){
 				return true;
 			}
 		}

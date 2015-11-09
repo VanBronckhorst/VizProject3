@@ -133,8 +133,8 @@ ForceArtistDiagram.prototype.addArtist = function(artist,p) {
 	if (!alreadyThere){
 		var badLink= "http://userserve-ak.last.fm/" 
 		var avatar = null;
-		for (i in artist["images"]){
-			var url = artist["images"][0]["url"];
+		for (i in artist.images){
+			var url = artist.images[0]["url"];
 			if (url.indexOf(badLink) == -1){
 				avatar = url;
 				break;

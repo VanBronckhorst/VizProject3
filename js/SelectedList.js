@@ -48,7 +48,7 @@ SelectedList.prototype.removeArtist = function(id) {
 
 SelectedList.prototype.addArtist = function(artist) {
     var el = this.listBox.append("div").attr("class","selected-list-element")
-    el.artistId = artist["id"]
+    el.artistId = artist.id
     var newEl = new SelectedElement(el,artist,this)
     this.elems.push(el);
     this.rearrange();
@@ -57,8 +57,8 @@ SelectedList.prototype.addArtist = function(artist) {
 var SelectedElement = function(d3where,artist,list) {
     var that=this;
     this.container = d3where;
-    var name = artist["name"];
-    this.artistId = artist["id"];
+    var name = artist.name;
+    this.artistId = artist.id;
     //this.closeBox = this.container.append("i").attr("class","fa fa-close selected-close-box")
     this.textBox = this.container.append("p").attr("class","fa fa-close selected-text-box").text(name)
                                 .on("click",function(){

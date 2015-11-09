@@ -57,7 +57,7 @@ var ArtistMap = function (where){
 }
 
 ArtistMap.prototype.addArtist= function(artist){
-	var location = artist["artist_location"]["location"];
+	var location = artist.location["location"];
 	var that = this;
 	
 	var callback = function(res) {

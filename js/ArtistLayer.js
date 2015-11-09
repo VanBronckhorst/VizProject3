@@ -3,7 +3,7 @@ var ArtistLayer = L.Class.extend({
     initialize: function (latlng,artist) {
         // save position of the layer or any options from the constructor
         this._latlng = latlng;
-        this.artistId = artist["id"];
+        this.artistId = artist.id;
     },
 
     onAdd: function (map) {

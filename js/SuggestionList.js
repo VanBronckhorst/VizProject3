@@ -79,8 +79,8 @@ SuggestionList.prototype.addArtist = function(artist) {
 var SuggestElement = function(d3where,artist) {
     var that=this;
     this.container = d3where;
-    var name = artist["name"];
-    this.artistId = artist["id"];
+    var name = artist.name;
+    this.artistId = artist.id;
     //this.closeBox = this.container.append("i").attr("class","fa fa-close selected-close-box")
     this.textBox = this.container.append("p").attr("class","fa fa-music suggested-text-box").text(" "+name);
 
