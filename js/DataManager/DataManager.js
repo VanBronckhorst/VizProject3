@@ -89,11 +89,12 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 					that.chosenArtists.push( artist );
 					// Cache artist
 					that.searchedArtists[ artist.id ] = artist;
+					callback( null, artist );
 				} )
-				.then( function () {
-					//console.log(artist.getPopularityOverTime());
-				}) 
-				.then( function () {
+				.catch( function ( err ) {
+					that.chosenArtists.push( artist );
+					// Cache artist
+					that.searchedArtists[ artist.id ] = artist;
 					callback( null, artist );
 				} );
 			} );
@@ -110,4 +111,4 @@ DataManager.prototype.suggestArtist = function ( s, callback, n ) {
 DataManager.prototype.similarArtists = function ( artistsId, callback) {
     
     this.echoNestManager.similarArtists( artistsId, callback );
-}
+};
