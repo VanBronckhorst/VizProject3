@@ -1,8 +1,9 @@
 var ArtistLayer = L.Class.extend({
 
-    initialize: function (latlng) {
+    initialize: function (latlng,artist) {
         // save position of the layer or any options from the constructor
         this._latlng = latlng;
+        this.artistId = artist["id"];
     },
 
     onAdd: function (map) {
@@ -28,14 +29,13 @@ var ArtistLayer = L.Class.extend({
 
     onRemove: function (map) {
         // remove layer's DOM elements and listeners
-        map.getPanes().overlayPane.removeChild(this._el);
-        map.off('viewreset', this._reset, this);
+        map.getPanes().markerPane.removeChild(this._el);
+        map.off('zoom viewreset', this.update, this);
     },
 
     update: function () {
         // update layer's position
         var pos = this._map.latLngToLayerPoint(this._latlng);
-        console.log(this._latlng,pos)
         L.DomUtil.setPosition(this._el, pos);
     }
 });

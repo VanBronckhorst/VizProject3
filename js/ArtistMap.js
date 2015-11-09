@@ -4,7 +4,8 @@ var ArtistMap = function (where){
 	this.mapId = "map"+ parseInt(Math.random()*10000);
 	this.mapDiv = d3.select(where).append("div").attr("id",this.mapId).attr("class","map-div");
 	this.observers = [];
-	
+	this.artistMarkers = []
+
 	this.addObserver = function(obs){
 		this.observers.push(obs);
 	}
@@ -69,8 +70,19 @@ ArtistMap.prototype.addArtist= function(artist){
 
 }
 
+ArtistMap.prototype.removeArtist= function(id){
+	for (var i in this.artistMarkers) {
+		var m = this.artistMarkers[i];
+		if (m.artistId == id) {
+			this.map.removeLayer(m);
+			this.artistMarkers.splice(i,1);
+		}
+	}
+}
+
 ArtistMap.prototype.addArtistMarker= function(artist,lat,lon){
-	var marker	= new ArtistLayer([lat, lon])
+	var marker	= new ArtistLayer([lat, lon],artist)
+	this.artistMarkers.push(marker);
 	//marker.options.title = artist.name;
 	this.map.addLayer(marker);
 }

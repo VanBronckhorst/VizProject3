@@ -97,5 +97,9 @@ var DataManager = function () {
 	        this.nestGet("artist", "profile", {id:id,bucket:bucket}, callback)
 	        
         }
+
+        this.similarArtists = function(artistsId,callback) {
+            this.nestGet("artist", "similar", {id:artistsId}, callback)
+        }
 		
 }
