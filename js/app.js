@@ -52,7 +52,7 @@ function init() {
 
     // functions for the suggested list
     var adderFunction = function(artist,player) {
-        dm.completeProfileFromId(artist,function(err,data){
+        dm.artistFromId(artist.id,function(err,data){
             var list = player==2?listp2:listp1;
             var sugg = player==2?suggp2:suggp1;
 
