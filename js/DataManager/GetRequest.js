@@ -30,5 +30,6 @@ httpGet = function ( url ) {
         };
         // do it
         request.send();
+
     } );
 };

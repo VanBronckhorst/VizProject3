@@ -111,4 +111,4 @@ DataManager.prototype.suggestArtist = function ( s, callback, n ) {
 DataManager.prototype.similarArtists = function ( artistsId, callback) {
     
     this.echoNestManager.similarArtists( artistsId, callback );
-}
+};
