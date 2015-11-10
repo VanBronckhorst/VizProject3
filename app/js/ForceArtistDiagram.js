@@ -86,15 +86,36 @@ var ForceArtistDiagram = function (where) {
 
 ForceArtistDiagram.prototype.restart = function () {
 	var that = this;
-	
+
 	this.link = this.link.data(this.links);
 	
 	this.link.enter().insert("line", ".node")
 	  .attr("class", "link");
-	
+
+	this.link.exit().remove();
+
+	console.log(this.nodes)
+
 	this.node = this.node.data(this.nodes);
-	  
-	
+
+	this.node.exit().remove();
+
+	// Nodes to Modify
+
+	var g = this.node
+			.attr("class", "node")
+			;
+
+	g.select("circle")
+			.attr("class",function(d) { return d.player;})
+			.style("fill", this.usingAvatar?function(d) { return "url(#"+d.id+")"}:null)
+
+	g.select("text")
+			.text(function(d){ return d.name});
+
+
+
+	// New Nodes
 	var g = this.node.enter().append("g")
 		.attr("class", "node")
 		.call(this.force.drag);
@@ -113,13 +134,60 @@ ForceArtistDiagram.prototype.restart = function () {
     	.attr("dominant-baseline","hanging")
     	.text(function(d){ return d.name});
 
+
 	
 	this.force.start();
 }
 
+ForceArtistDiagram.prototype.removeArtist = function(artist,p) {
+
+
+	var alreadyThere = false;
+	var oldNode;
+	for (var i in this.nodes){
+		var n = this.nodes[i];
+		if (n.id == artist.id){
+			alreadyThere=true;
+			oldNode = n;
+			var oldNodeIndex = i;
+		}
+	}
+
+	if (alreadyThere) {
+		if (oldNode.player.indexOf("player" + p)!=-1) {
+			var start = oldNode.player.indexOf("player" + p)==0?8:0
+			var end = oldNode.player.indexOf("player" + p)==0?15:7
+			oldNode.player = oldNode.player.slice(start,end);
+			if (oldNode.player.length==0) {
+				// Remove the node
+				var j=0;
+				while (j<this.links.length) {
+					var l = this.links[j];
+					if (l.source==oldNode || l.target==oldNode) {
+						this.links.splice(j,1);
+					} else {
+						j += 1;
+					}
+				}
+
+				this.nodes.splice(oldNodeIndex,1);
+				this.restart();
+			} else {
+				// Only change class
+
+				this.node.select("circle").attr("class", function(d){ return d.player })
+						.style("fill", this.usingAvatar?function(d) { return "url(#"+d.id+")"}:null);
+			}
+		}
+
+	}
+
+
+}
+
 ForceArtistDiagram.prototype.addArtist = function(artist,p) {
 	var artistNode = artist;
-	
+
 	var alreadyThere = false;
 	var oldNode;
 	for (var i in this.nodes){
@@ -129,12 +197,12 @@ ForceArtistDiagram.prototype.addArtist = function(artist,p) {
 			oldNode = n;
 		}
 	}
-	
+
 	if (!alreadyThere){
 		var badLink= "http://userserve-ak.last.fm/" 
 		var avatar = null;
-		for (i in artist["images"]){
-			var url = artist["images"][0]["url"];
+		for (i in artist.images){
+			var url = artist.images[0]["url"];
 			if (url.indexOf(badLink) == -1){
 				avatar = url;
 				break;

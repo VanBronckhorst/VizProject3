@@ -1,4 +1,11 @@
 .node {
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+}
+
+.node:active {
+	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
   
 }
 
