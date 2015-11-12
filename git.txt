@@ -1,0 +1,19 @@
+pushare/pullare sul/dal master: git push/pull origin master   
+
+creare un branch: git branch newBranch
+
+uplodare il nuovo branch online: git push --set-upstream origin newBranch
+
+swhitcare to an existing branch: git checkout theBranch
+
+cachare le credenziali: git config --global credential.helper wincred
+
+commit con messaggio: git commit -a -m "messaggio"
+
+
+
+
+
+
+
+
