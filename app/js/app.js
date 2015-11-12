@@ -15,6 +15,8 @@ function init() {
     var auto = new AutoCompleteBox("#autocomplete")
     var auto2 = new AutoCompleteBox("#autocomplete2")
 
+    var staticTimeline = new staticStreamGraph([], "explore-timeline");
+
 
     // functions for the autocomplete fields
     auto.searchFunc(function(d){if(d){
