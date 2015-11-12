@@ -104,7 +104,7 @@ rownames(z) <- 1:nrow(z)
 write.table(z, file = "1990sArtist.csv",sep=",",row.names=FALSE)
 ####============twenties
 data2000 = assign(paste("artist",year,sep=''),read.csv(paste("C:/wamp/www/viz/project3/app/data/bestArtistsByYear/2000artist.csv",sep=''), stringsAsFactors=FALSE))
-for(year in 2001:2014){
+for(year in 2001:2010){
   assign(paste("artist",year,sep=''),read.csv(paste("C:/wamp/www/viz/project3/app/data/bestArtistsByYear/",year,"artist.csv",sep=''), stringsAsFactors=FALSE))
   data2000<-rbind(data2000,get(paste("artist",year,sep='')))
 }
@@ -115,5 +115,5 @@ k<-h[!duplicated(h$Artist),colnames(h)!='score']
 z<-k[order(-k$sum),]
 z<-z[z$Artist!='Various Artists',]
 rownames(z) <- 1:nrow(z)
-write.table(cc, file = "2000sArtist.csv",sep=",",row.names=FALSE)
+write.table(z, file = "2000sArtist.csv",sep=",",row.names=FALSE)
 
