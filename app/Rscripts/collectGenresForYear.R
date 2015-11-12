@@ -16,7 +16,7 @@ statusError=list()
 noArtistError=list()
 noGenresError=list()
 
-for(year in 1940:1950){
+for(year in 1950:2010){
   print(year)
   map <- new.env(hash=T, parent=emptyenv())#set hashmap of genres 
   #at the beginning of each decade reset the map of genresForDecade
