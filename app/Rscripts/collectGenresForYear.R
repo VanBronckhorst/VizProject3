@@ -15,15 +15,15 @@ nestKeys = c('CFLBFVAPYPMUYTTSR','QVJX27LZP1Q9GYBYV','45PFVVAQZQJD5BIV5','PKT63B
 statusError=list()
 noArtistError=list()
 noGenresError=list()
-
-for(year in 1950:2010){
+startYear=2000
+for(year in startYear:2010){
   print(year)
   map <- new.env(hash=T, parent=emptyenv())#set hashmap of genres 
   #at the beginning of each decade reset the map of genresForDecade
   if( year%%10 == 0){
     mapForDecade = new.env(hash = T,parent = emptyenv())
   }
-  tmp<-assign(paste("artist",year,sep=''),read.csv(paste("C:/wamp/www/viz/project3/app/data/bestArtistsByYear/",year,"artist.csv",sep=''), stringsAsFactors=FALSE))
+  tmp<-assign(paste("artist",year,sep=''),read.csv(paste("C:/wamp/www/viz/project3/app/data/artistsByYear/",year,"artist.csv",sep=''), stringsAsFactors=FALSE))
   namesId = tmp[,'Artist']
   
   #==========================for each artist find his genres
@@ -50,6 +50,7 @@ for(year in 1950:2010){
             }else{
               map[[genreName]] = map[[genreName]]+score
             }
+           #print(as.list(map))
             if(is.null(mapForDecade[[genreName]])){
               mapForDecade[[genreName]]=score
             }else{

@@ -24,6 +24,8 @@ for(y in startYear:endYear){
   for(i in 1:obj$count){
     names<-append(names,obj$results$collection1[[i]]$artist$text)
   }
+  #==============remove duplicated artists
+  names<-unique(names)
   #==============give 'em a score based on the scores of 1999
   #get artists name from nameList
   artists<-data.frame(t(data.frame(names)))
@@ -31,7 +33,7 @@ for(y in startYear:endYear){
   artists<-as.data.frame(artists[artists$name!='Soundtrack',])
   row.names(artists)<- 1:nrow(artists)
   #get data 1999
-  `1999artist` <- read.csv("C:/wamp/www/viz/project3/app/data/bestArtistsByYear/1999artist.csv", stringsAsFactors=FALSE)
+  `1999artist` <- read.csv("C:/wamp/www/viz/project3/app/data/artistsByYear/1999artist.csv", stringsAsFactors=FALSE)
   #trim to the size of names
   scores<- as.data.frame(`1999artist`[1:nrow(artists),'sum'] )
   scores<-setNames(scores,1:ncol(scores))
