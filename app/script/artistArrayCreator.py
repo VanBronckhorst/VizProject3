@@ -32,13 +32,18 @@ print topTen
 print len(topTen)
 
 res=[]
+perArtist = {}
 
 for i in artistsPerYear.keys():
     yearArray = artistsPerYear[i]
     for art in yearArray:
         if art["name"] in topTen:
-            res.append({"name":art["name"],"value":art["value"],"year":i})
+            if not(art["name"] in perArtist.keys()):
+                perArtist[art["name"]]=[]
+            perArtist[art["name"]].append({"name":art["name"],"value":art["value"],"year":i})
 
+for i in perArtist.keys():
+    res.append(perArtist[i])
 
 import json
 with open("../data/artistsStaticData", 'w') as csvfile:
