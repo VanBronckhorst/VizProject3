@@ -71,34 +71,39 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 	var that = this;
 
 	this.echoNestManager.completeProfileFromId( id )
-	.then( function ( json ) { artist.artistFromEchoJSON( json ); } )
-	.then( function () {
-		that.spotifyManager.completeProfileFromId( artist.spotId )
-		.then( function ( json ) { artist.artistFromSpotifyJSON( json ); } ); } )
-		.then( function () {
-			that.spotifyManager.albumIdsFromId( artist.spotId )
-			.then( function ( json ) {
-				var albumIds = [];
-				for ( var i = 0, len = json[ 'items' ].length; i < len; ++i) {
+	.then( function ( json ) { 
+		artist.artistFromEchoJSON( json );
 
-					albumIds.push( json[ 'items' ][ i ][ 'id' ] ); 
-				}
+		that.spotifyManager.completeProfileFromId( artist.spotId )
+		.then( function ( json ) { artist.artistFromSpotifyJSON( json ); } );
+
+		that.spotifyManager.albumIdsFromId( artist.spotId )
+		.then( function ( json ) {
+
+			var albumIds = [];
+			for ( var i = 0, len = json[ 'items' ].length; i < len; ++i) {
+
+				albumIds.push( json[ 'items' ][ i ][ 'id' ] ); 
+			}
+			if ( albumIds.length != 0 ) {
 				that.spotifyManager.albumsFromIds( albumIds )
-				.then( function ( json ) { artist.albumsFromSpotifyJSON( json ); } )
-				.then( function () {
-					that.chosenArtists.push( artist );
-					// Cache artist
-					that.searchedArtists[ artist.id ] = artist;
-					callback( null, artist );
-				} )
-				.catch( function ( err ) {
-					that.chosenArtists.push( artist );
-					// Cache artist
-					that.searchedArtists[ artist.id ] = artist;
-					callback( null, artist );
+				.then( function ( json ) { 
+					artist.albumsFromSpotifyJSON( json );
 				} );
-			} );
+			}
+			that.chosenArtists.push( artist );
+			// Cache artist
+			that.searchedArtists[ artist.id ] = artist;
+			callback( null, artist ); 
+		} )
+		.catch( function ( err ) {
+			that.chosenArtists.push( artist );
+			// Cache artist
+			that.searchedArtists[ artist.id ] = artist;
+			callback( null, artist );
 		} );
+	} );
+
 };
 
 

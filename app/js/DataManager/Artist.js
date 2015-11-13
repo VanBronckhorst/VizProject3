@@ -1,3 +1,10 @@
+var defaultLocation = {
+	"city": null,
+    "country": null,
+    "location": "Easter Island",
+    "region": null
+};
+
 var Artist = function () {
 
 	this.name;
@@ -28,9 +35,9 @@ Artist.prototype.artistFromEchoJSON = function ( json ) {
 
 	this.name = art[ 'name' ];
 	this.id = art[ 'id' ];
-	this.spotId = art[ 'foreign_ids' ][ 0 ][ 'foreign_id' ].split( ':' )[2];
+	this.spotId = art[ 'foreign_ids'] ? art[ 'foreign_ids' ][ 0 ][ 'foreign_id' ].split( ':' )[2] : null;
 	this.genres = art[ 'genres' ];
-	this.location = art[ 'artist_location' ];
+	this.location = art[ 'artist_location' ] ? art[ 'artist_location' ] : defaultLocation;
 	this.terms = art[ 'terms' ];
 };
 
