@@ -38,6 +38,8 @@
 		<script src="js/DataManager/GetRequest.js"></script>
 
 		<script src="js/TimeLine/StaticStreamGraph.js"></script>
+		<script src="js/TimeLine/StaticTimeline.js"></script>
+		<script src="js/TimeLine/SingleTimelineGraph.js"></script>
 		
 	</head>
 	<body style="background-color: #dddddd;height: 100%;" onload="init()">
@@ -49,7 +51,11 @@
 						<div class="explore-switch-button"></div>
 					</div>
 					<div id="explore-shared" class="shared-view">
-						<div id="explore-timeline" class="timeline-view expandible"></div>
+						<div id="explore-timeline" class="timeline-view expandible">
+							<div id="explore-buttons-container">
+								
+							</div>
+						</div>
 						<div id="explore-map" class="map-view expandible"></div>
 						<div id="explore-force" class="force-view expandible"></div>
 					</div>

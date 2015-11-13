@@ -1,5 +1,5 @@
-function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ], ... ]
-    
+function StaticStreamGraph ( where, data, title ) { 
+
   var width = $( where ).width(),
       height = $( where ).height();
 
@@ -9,18 +9,30 @@ function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ]
   width = width - margin.left - margin.right;
   height = height - margin.top - margin.bottom;
 
+
+  var title = d3.select( where )
+      .append( "div" )
+      .style( "position", "absolute" )
+      .style( "z-index", "0" )
+      .style( "width", width / 2 )
+      .style( "height", width / 40 )
+      .style( "top", "0px")
+      .style( "left", "0px" )
+      .style( "font-size", "4vmin")
+      .style( "pointer-events", "none" )
+      .text( title );
+
+
+
   var x = d3.time.scale()
       .range( [ 0, width ] );
 
   var y = d3.scale.linear()
-      .range( [ height, 0 ] );
+      .range( [ height - height / 20, height / 20 ] );
 
-  var n = data.length, // number of layers 
-      m = data[ 0 ].length, // number of samples per layer
+  var format = d3.time.format( "%Y" );
       
-      format = d3.time.format( "%Y" ),
-      
-      stack = d3.layout.stack().offset( "silhouette" )
+  var stack = d3.layout.stack().offset( "silhouette" )
       .values( function ( d ) { return d.values; } )
       .x( function ( d ) { return d.date; } )
       .y( function ( d ) { return d.value; } );
@@ -28,15 +40,15 @@ function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ]
   var nest = d3.nest()
       .key( function ( d ) { return d.name; } );
 
-  var color = [ "#045A8D", "#2B8CBE", "#74A9CF", "#A6BDDB", "#D0D1E6", "#F1EEF6",
-                "#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1C9F0",
-                "#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9",
-                "#00A8E8", "#007EA7", "#003459", "#045A8D", "#2B8CBE", "#74A9CF",
-                "#A6BDDB", "#D0D1E6", "#F1EEF6", "#980043", "#DD1C77", "#DF65B0", 
-                "#C994C7", "#D4B9DA", "#F1C9F0", "#B30000", "#E34A33", "#FC8D59",
-                "#FDBB84", "#FDD49E", "#FEF0D9", "#00A8E8", "#007EA7", "#003459",
-                "#045A8D", "#2B8CBE", "#74A9CF", "#A6BDDB", "#D0D1E6", "#F1EEF6",
-                "#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1C9F0" ];
+  var colors = [ "#045A8D", "#2B8CBE", "#74A9CF", "#A6BDDB", "#D0D1E6", "#F1EEF6",
+                 "#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1C9F0",
+                 "#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9",
+                 "#00A8E8", "#007EA7", "#003459", "#045A8D", "#2B8CBE", "#74A9CF",
+                 "#A6BDDB", "#D0D1E6", "#F1EEF6", "#980043", "#DD1C77", "#DF65B0", 
+                 "#C994C7", "#D4B9DA", "#F1C9F0", "#B30000", "#E34A33", "#FC8D59",
+                 "#FDBB84", "#FDD49E", "#FEF0D9", "#00A8E8", "#007EA7", "#003459",
+                 "#045A8D", "#2B8CBE", "#74A9CF", "#A6BDDB", "#D0D1E6", "#F1EEF6",
+                 "#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1C9F0" ];
 
   var strokecolor = "#000000";
 
@@ -51,28 +63,33 @@ function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ]
   var area = d3.svg.area()
       .interpolate( "cardinal" )
       .x( function( d ) { return x( d.date ); } )
-      .y0(function( d ) { return y( d.y0 ); } )
-      .y1(function( d ) { return y( d.y0 + d.y ); } );
+      .y0(function( d ) { return y( d.y0 - height / 20 ); } )
+      .y1(function( d ) { return y( d.y0 - height / 20 + d.y ); } );
 
-  var layers0 = stack( nest.entries( data.map( function ( d ) {
-    return { name: d.name, date: d.date, value: 0 };
-  } ) ));
-
-  layers0 = layers0.map( function ( d ) {
-    return { key: d.key, values: d.values.map( function ( a ) {
-      return { date: a.date, name: a.name, y: 0 , y0: 0 };
-    } ) };
-  } );
 
   var layers = stack( nest.entries( data ) );
 
+  layers0 = layers.map( function ( d, i ) {
+    return { key: d.key, values: d.values.map( function ( a ) {
+      return { date: a.date, name: a.name, y: 0, y0: 0, value: a.value, color: colors[ i ] };
+    } ) };
+  } );
+
+  layers = layers.map( function ( d, i ) {
+    return { key: d.key, values: d.values.map( function ( a ) {
+      return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: colors[ i ] };
+    } ) };
+  } );
+
   x.domain( d3.extent( data, function ( d ) { return d.date; } ) );
 
-  y.domain( [ 0, d3.max( data, function ( d ) { return d.y0 + d.y; } ) ] );
+  var yMax = d3.max( data, function ( d ) { return d.y0 + d.y; } );
+
+  y.domain( [ 0, yMax ] );
 
   var svg = d3.select( where ).append( "svg" )
       .attr( "width", width + margin.left + margin.right )
-      .attr( "height", height + margin.top + margin.bottom );
+      .attr( "height", height + margin.top + margin.bottom )
 
   var graph = svg.append( "g" )  
       .attr( "transform", "translate(" + margin.left + "," + 0 + ")" );
@@ -84,7 +101,10 @@ function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ]
         return area( d.values );
       } )
       .attr( "class", "timeline-path" )
-      .style( "fill", function ( d, i) { return color[ i ]; } );
+      .attr( "id", function ( d ) {
+        return d.key + "-timeline-path";
+      } )
+      .style( "fill", function ( d, i ) { return d.values[ 0 ].color; } );
 
   var datearray = [];
 
@@ -157,8 +177,8 @@ function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ]
     .style( "position", "absolute" )
     .style( "z-index", "20" )
     .style( "visibility", "hidden" )
-    .style( "top", 0 + "px" )
-    .style( "left", 0 + "px" );
+    .style( "top", -10 + "px" )
+    .style( "left", width / 2 + width / 8 + "px" );
 
   var vertical = d3.select( where )
       .append( "div" )
@@ -186,8 +206,7 @@ function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ]
       } )
       .on( "mouseout", function () {
         vertical.style( "visibility", "hidden" );
-      });
-
+      } );
 
   function transition () {
     d3.selectAll( ".timeline-path" )
@@ -201,28 +220,29 @@ function StaticStreamGraph ( data, where ) { // data = [ [ { x: _, y: _ }, ... ]
         .on( "mousemove", null )
         .on( "mouseout", null )
       .transition()
-        .duration( 2000 )
-        .ease("elastic")
+        .duration( 800 )
+        .ease( "exp-out" )
         .attr( "d", function ( d ) { return area( d.values ); } )
       .each( "end", function () {
         // Re-enable hover
         d3.selectAll( ".timeline-path" )
           .on( "mouseover", mouseover )
           .on( "mousemove", mousemove )
-          .on( "mouseout", mouseout ); 
+          .on( "mouseout", mouseout );
       } );
   }
-
 
   this.remove = function () {
     svg.remove();
     graph.remove();
     tooltip.remove();
     vertical.remove();
+    title.remove();
   };
 
-
-
+  this.getPaths = function () {
+    return d3.selectAll( ".timeline-path" );
+  }
 
   // Animate timeline
   transition();

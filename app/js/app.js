@@ -15,13 +15,8 @@ function init() {
     var auto = new AutoCompleteBox("#autocomplete")
     var auto2 = new AutoCompleteBox("#autocomplete2")
 
-    var staticTimeline = new StaticStreamGraph( artistPopularity, "#explore-timeline" );
 
-    $( "#" + "explore-timeline" ).resize( function () {
-
-        staticTimeline.remove();
-        staticTimeline = new StaticStreamGraph( artistPopularity, "#explore-timeline" );
-    } );
+    var staticTimeline = new StaticTimeline( "#explore-timeline" );
     
     
 
