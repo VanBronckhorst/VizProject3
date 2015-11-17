@@ -1,17 +1,17 @@
-function SingleTimelineGraph ( where, data, color, title ) {
+function SingleTimelineGraph ( where, data, color, title, start, end ) {
 
   var width = $( where ).width(),
-	  	height = $( where ).height();
+	  height = $( where ).height();
 
   var data = data;
 
   var color = color;
 
-	var margin = { top: height * 0.05 , right: width * 0.05 ,
-               	   bottom: height * 0.06 , left: width * 0.05 };
+  var margin = { top: height * 0.05 , right: width * 0.02 ,
+               	 bottom: height * 0.06 , left: width * 0.02 };
 
-	width = width - margin.left - margin.right;
-	height = height - margin.top - margin.bottom;
+  width = width - margin.left - margin.right;
+  height = height - margin.top - margin.bottom;
 
   var title = d3.select( where )
       .append( "div" )
@@ -53,7 +53,13 @@ function SingleTimelineGraph ( where, data, color, title ) {
 
 	var layers = [ stack( data ) ];
 
-	x.domain( d3.extent( data.values , function ( d ) { return d.date; } ) );
+  if ( start && end ) {
+    var startDate = new Date( start, 1, 1 );
+    var endDate = new Date( end, 1, 1 );
+    x.domain( [ startDate, endDate ] );
+  } else {
+    x.domain( d3.extent( data.values , function ( d ) { return d.date; } ) );
+  }
 
 	y.domain( [ 0, d3.max( data.values, function ( d ) { return d.y; } ) ] );
 
@@ -66,7 +72,7 @@ function SingleTimelineGraph ( where, data, color, title ) {
 
 	graph.selectAll( "path" )
     	.data( layers0 )
-  .enter().append( "path" )
+  	.enter().append( "path" )
     	.attr( "d", function ( d ) {
       	return area( d.values );
     	} )
@@ -76,118 +82,127 @@ function SingleTimelineGraph ( where, data, color, title ) {
     	} )
     	.style( "fill", color );
 
-  	var datearray = [];
 
-  	function mouseover ( d, i ) {
+  var xAxis = d3.svg.axis()
+    .scale( x )
+    .orient( "bottom" )
+    .ticks( 10 )
+    .outerTickSize(0);
+  
+  graph.append( "g" )
+    .attr( "class", "timeline-x-axis" )
+    .attr( "transform", "translate(0," + height + ")" )
+    .call( xAxis );
+
+
+
+	var datearray = [];
+
+  function mouseclick ( d, i ) {
+
+    mousex = d3.mouse( this )[ 0 ];
+    mousey = d3.mouse( this )[ 1 ];
+    var ix = x.invert( mousex );
+    var ixYear = ix.getYear();
+    var selected = null;
+    var yyyy = null;
+    for ( var i = 0; i < d.values.length; ++i ) {
+      if ( d.values[ i ].date.getYear() == ixYear ) {
+        selected = d.values[ i ];
+        yyyy = 1900 + ixYear;
+        break;
+      }
+    }
+
+    if ( selected != null ) {
+      d3.select( ".tooltip" ).style( "visibility", "visible" );
+      var deltaY = 10;
+      var ypos = mousey + ( ( mousey > height / 2 ) ? -deltaY : 4*deltaY );
+
+      tooltip.select( "text" )
+        .attr( "y", Math.round( ypos ) )
+        .text( yyyy + " " + Math.round( selected.value ) );
+      var textWidth = tooltip.select( "text" ).node().getComputedTextLength();
+      var xpos, rxpos;
+      if ( mousex > width / 2 ) {
+        xpos = Math.round( mousex - textWidth + 15 );
+        rxpos = xpos;
+      } else {
+        xpos = Math.round( mousex + 18 );
+        rxpos = xpos;
+      }
+      tooltip.select( "text" )
+        .attr( "x", xpos );
+      tooltip.select( "rect" )
+        .attr( "width", textWidth )
+        .attr( "x", rxpos )
+        .attr( "y", Math.round( ypos - 15 ) );
+    }
+  }
+
+  function mouseout ( d, i ) {
+    tooltip.style( "visibility", "hidden" );
+  }
+
+  function mousemove ( d, i ) {
+    tooltip.style( "visibility", "hidden" );
+  }
     
-	    graph.selectAll( ".timeline-path" ).transition()
-	    	.duration( 250 )
-	    	.attr( "opacity", function ( d, j ) {
-	       		return j != i ? 0.07 : 1;
-	    } );
-  	} 
+  var vertical = d3.select( where )
+        .append( "div" )
+        .attr( "class", "remove" )
+        .style( "position", "absolute" )
+        .style( "z-index", "19" )
+        .style( "width", "1px" )
+        .style( "height", height + "px" )
+        .style( "top", "0px" )
+        .style( "bottom", "0px" )
+        .style( "left", "0px" )
+        .style( "background", "#fff" )
+        .style( "visibility", "hidden" );
+  d3.select( where )
+      .on( "mousemove", function () {  
+         mousex = d3.mouse( this );
+         mousex = mousex[ 0 ] - 1;
+         vertical
+          .style( "left", mousex + "px" )
+          .style( "visibility", "visible" ) 
+        } )
+      .on( "mouseover", function () {  
+         mousex = d3.mouse( this);
+         mousex = mousex[ 0 ] - 1;
+         vertical
+         .style( "left", mousex + "px" )
+         .style( "visibility", "visible" ) 
+       } )
+      .on( "mouseout", function () {
+        vertical.style( "visibility", "hidden" );
+      } );
 
-  	function mousemove ( d, i ) {
 
-    	mousex = d3.mouse( this );
-    	mousex = mousex[ 0 ];
-   		var invertedx = x.invert( mousex );
-	    invertedx = invertedx.getYear();
-	    var selected = ( d.values );
-	    for ( var k = 0; k < selected.length; ++k ) {
-	    	datearray[ k ] = selected[ k ].date;
-	    	datearray[ k ] = datearray[ k ].getYear();
-    	}
-
-	    mousedate = datearray.indexOf( invertedx );
-
-	    pro = Math.round( d.values[ mousedate ].value );
-
-	    d3.select( this )
-	    .classed( "hover", true )
-	    .attr( "stroke", strokecolor )
-	    .attr( "stroke-width", "0.5px" );
-
-	    if ( invertedx >= 40 && invertedx <= 99 ) {
-	      invertedx = "19" + invertedx.toString();
-	    } else {
-	      invertedx = "20" + invertedx.toString();
-	    }
-
-    	tooltip.html( "<p>" + d.key + "<br>" + invertedx + "<br>" + pro + "</p>" ).style( "visibility", "visible" );
-  	}
-
-  	function mouseout ( d, i ) {
-
-   		graph.selectAll( ".timeline-path" )
-    	.transition()
-	    .duration( 250 )
-	    .attr( "opacity", "1" );
-	    d3.select( this )
-	    .classed( "hover", false )
-    	tooltip.html( "<p>" + d.key + "<br>" + pro + "</p>" ).style( "visibility", "hidden" );
-  	}
-
-  	var xAxis = d3.svg.axis()
-    	.scale( x )
-    	.orient( "bottom" )
-    	.ticks( 10 )
-    	.outerTickSize(0);
+  var tooltip = svg.append( "g" )
+      .attr( "class", "tooltip" );
+  tooltip.append( "rect" )
+      .attr( "height", 20 )
+      .style( "fill", "#fff" )
+      .style( "opacity", 0.6 );
+  tooltip.append( "text" ) 
+      .attr( "class", "tooltip-text" )
+      .attr( "font-size", "2vmin" )
+      .text( "" );
     
-  	graph.append( "g" )
-    	.attr( "class", "timeline-x-axis" )
-      	.attr( "transform", "translate(0," + height + ")" )
-      	.call( xAxis );
 
-  	var tooltip = d3.select( where ) 
-    	.append( "div" )
-    	.attr( "class", "timeline-remove" )
-    	.style( "position", "absolute" )
-    	.style( "z-index", "20" )
-    	.style( "visibility", "hidden" )
-    	.style( "top", 0 + "px" )
-    	.style( "left", 0 + "px" );
-
-  	var vertical = d3.select( where )
-      	.append( "div" )
-      	.attr( "class", "timeline-remove" )
-      	.style( "position", "absolute" )
-      	.style( "z-index", "19" )
-      	.style( "width", "1px" )
-      	.style( "height", height + "px" )
-      	.style( "top", "0px" )
-      	.style( "bottom", "0px" )
-      	.style( "left", "0px" )
-      	.style( "background", "#fff" )
-      	.style( "visibility", "hidden" );
-
-    /*    
-  	d3.select( where )
-    	.on( "mousemove", function () {  
-        	mousex = d3.mouse( this );
-        	mousex = mousex[ 0 ] - 1;
-        	vertical.style( "left", mousex + "px" ).style( "visibility", "visible" ); 
-      	} )
-      	.on( "mouseover", function () {  
-        	mousex = d3.mouse( this );
-        	mousex = mousex[ 0 ] - 1;
-        	vertical.style( "left", mousex + "px" );
-      	} )
-      	.on( "mouseout", function () {
-        	vertical.style( "visibility", "hidden" );
-      	} );
-    */
 
 	function transition () {
-		d3.selectAll( ".timeline-path" )
+		graph.selectAll( ".timeline-path" )
 	        .data( function () {
 	        	var t = layers;
 	        	layers = layers0;
 	        	return layers0 = t;
 	        } )
         	// Disable hover during transition
-        	.on( "mouseover", null ) 
-        	.on( "mousemove", null )
+        	.on( "click", null )
+          .on( "mouvemove", null)
         	.on( "mouseout", null )
       	.transition()
         	.duration( 1000 )
@@ -196,10 +211,10 @@ function SingleTimelineGraph ( where, data, color, title ) {
 	    	.attr( "stroke-width", "0.5px" )
       	.each( "end", function () {
         	// Re-enable hover
-        	d3.selectAll( ".timeline-path" )
-          	//.on( "mouseover", mouseover )
-          	//.on( "mousemove", mousemove )
-          	//.on( "mouseout", mouseout );
+        graph.selectAll( ".timeline-path" )
+          .on( "click", mouseclick )
+          .on( "mousemove", mousemove )
+          .on( "mouseout", mouseout );
       	} );
   	}
 
@@ -215,16 +230,24 @@ function SingleTimelineGraph ( where, data, color, title ) {
   		return color;
   	};
 
-  	this.getData = function() {
+  	this.getData = function () {
   		return data;
   	};
 
-    this.getKey = function() {
+    this.getKey = function () {
       return data.key;
     }
 
+    this.getStart = function () {
+      return start;
+    }
+
+    this.getEnd = function () {
+      return end;
+    }
+
   	this.getPaths = function () {
-    	return d3.selectAll( ".timeline-path" );
+    	return graph.selectAll( ".timeline-path" );
   	};
 
   	// Animate timeline

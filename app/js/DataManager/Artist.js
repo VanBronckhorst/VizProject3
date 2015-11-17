@@ -17,7 +17,7 @@ var Artist = function () {
 
 	this.popularity;
 
-	this.albums;
+	this.albums = [];
 
 	this.images;
 
@@ -26,6 +26,10 @@ var Artist = function () {
 	this.location;
 
 	this.popularityOverTime;
+
+	this.minActivityYear;
+
+	this.maxActivityYear;
 
 };
 
@@ -48,12 +52,23 @@ Artist.prototype.artistFromSpotifyJSON = function ( json ) {
 
 Artist.prototype.albumsFromSpotifyJSON = function ( json ) {
 
-	this.albums = [];
+	var albumPerYear = {};
+
 	for ( var a in json[ 'albums' ] ) {
 		var album = new Album();
 		album.albumFromSpotifyJSON( json[ 'albums' ][ a ] );
-		this.albums.push( album );
+
+		// Add only the more popular album for year
+		if ( !albumPerYear[ album.year ] || album.popularity > albumPerYear[ album.year ].popularity ) {
+			albumPerYear[ album.year ] = album;
+		}
 	}
+
+	for ( var k in albumPerYear ) {
+		this.albums.push( albumPerYear[ k ] );
+	}
+	
+
 };
 
 Artist.prototype.getPopularityOverTime = function () {
@@ -65,29 +80,63 @@ Artist.prototype.getPopularityOverTime = function () {
 };
 
 Artist.prototype.computePopularity = function () {
-	
+
+	var startingYear = 1940;
+	var currentYear = 2015;
+
+	var top = startingYear;
+	var bot = currentYear;
+
+	var popularity = [];
 	var yearToPop = {};
 	for ( var i = 0, len = this.albums.length; i < len; ++i ) {
 		yearToPop[ this.albums[ i ].year ] = this.albums[ i ].popularity;
-	}
-	var popularity = [];
-	for ( var i = 1910; i < 2016; ++i) {
-		popularity[ i ] = yearToPop[ i ] || 0;
+		if ( this.albums[ i ].year > top ) {
+			top = this.albums[ i ].year;
+		}
+		if ( this.albums[ i ].year < bot ) {
+			bot = this.albums[ i ].year;
+		}
 	}
 
+	function weight( x ) {
+		if ( x > currentYear ) {
+			x = currentYear;
+		}
+		// Linear weight, to enhance older artists:
+		// when x = currentYear y = 1
+		// when x = startingYear y = 10
+		var m = ( 1 - 5 ) / ( currentYear - startingYear );
+		return m * ( x - currentYear ) + 1;
+	}
+
+
 	function smooth ( x ) {
-		var sdsq = 2;
+		var sdsq = .7;
 		// Change smoothing function for different shapes
 		return Math.exp( -x * x / sdsq );
 		// return Math.pow( x, alpha ) * Math.exp( -x * beta );
 	}
-
-	var smoothedPopularity = [];
-	for ( var i in popularity ) {
+	// Smooth popularity
+	var smoothedPopularity = {};
+	for ( var i = startingYear; i <= currentYear; ++i  ) {
 		smoothedPopularity[ i ] = 0;
-		for ( var j in popularity ) {
-			smoothedPopularity[ i ] += popularity[ j ] * smooth( i - j );
-		} 
+		for ( var j = startingYear; j <= currentYear; ++j ) {
+			smoothedPopularity[ i ] += ( yearToPop[ j ] || 0 ) * smooth( i - j );
+		}
+		// Weight popularity
+		//smoothedPopularity[ i ] *= weight( i );
 	}
-	return smoothedPopularity;
+	// Format popularity
+	for ( var i = startingYear; i <= currentYear; ++i) {
+		popularity.push( { "name": this.name, "date": i.toString(), "value": smoothedPopularity[ i ] || 0 } );
+	}
+	// Set min and max activity year
+	var delta = 3;
+	bot = +bot;
+	top = +top;
+	this.minActivityYear = _.max( [ bot - delta, startingYear ] );
+	this.maxActivityYear = _.min( [ top + delta, currentYear ]  );
+
+	return popularity;
 };

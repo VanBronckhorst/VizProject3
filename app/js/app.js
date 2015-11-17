@@ -17,7 +17,7 @@ function init() {
 
 
     var staticTimeline = new StaticTimeline( "#explore-timeline" );
-    
+    var dynamicTimeline = new DynamicTimeline( "#compare-timeline" );
     
 
 
@@ -32,7 +32,9 @@ function init() {
                 listp1.addArtist(data);
                 suggp1.addArtist(data);
                 fl.addArtist(data,1);
-                m.addArtist(data,1);})
+                m.addArtist(data,1)
+                dynamicTimeline.addArtist( data, 1 ); 
+                ;})
         });
     auto2.searchFunc(function(d){if(d){
             dm.suggestArtist(d,function(err,data){if(!err){	//console.log(data);
@@ -45,7 +47,10 @@ function init() {
                 listp2.addArtist(data);
                 suggp2.addArtist(data);
                 fl.addArtist(data,2);
-                m.addArtist(data,2);})
+                m.addArtist(data,2);
+                dynamicTimeline.addArtist( data, 2 );
+
+            })
         });
 
     // functions for the selected list
@@ -71,6 +76,8 @@ function init() {
             sugg.addArtist(data);
             fl.addArtist(data,player);
             m.addArtist(data,player);
+            dynamicTimeline.addArtist( data, player );
+
 
         })
     }

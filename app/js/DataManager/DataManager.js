@@ -89,12 +89,17 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 				that.spotifyManager.albumsFromIds( albumIds )
 				.then( function ( json ) { 
 					artist.albumsFromSpotifyJSON( json );
+					that.chosenArtists.push( artist );
+					// Cache artist
+					that.searchedArtists[ artist.id ] = artist;
+					callback( null, artist ); 
 				} );
+			} else {
+				that.chosenArtists.push( artist );
+				// Cache artist
+				that.searchedArtists[ artist.id ] = artist;
+				callback( null, artist ); 
 			}
-			that.chosenArtists.push( artist );
-			// Cache artist
-			that.searchedArtists[ artist.id ] = artist;
-			callback( null, artist ); 
 		} )
 		.catch( function ( err ) {
 			that.chosenArtists.push( artist );
@@ -103,7 +108,6 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 			callback( null, artist );
 		} );
 	} );
-
 };
 
 

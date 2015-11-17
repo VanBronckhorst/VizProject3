@@ -27,6 +27,8 @@
 
 
 		<script src="js/Util/resize.js"></script>
+		<script src="js/Util/underscore-min.js"></script>
+		
 
 		<script src="data/processed_artist_popularity.js"></script>
 
@@ -40,7 +42,10 @@
 		<script src="js/TimeLine/StaticStreamGraph.js"></script>
 		<script src="js/TimeLine/StaticTimeline.js"></script>
 		<script src="js/TimeLine/SingleTimelineGraph.js"></script>
-		
+		<script src="js/TimeLine/DynamicStreamGraph.js"></script>
+		<script src="js/TimeLine/DynamicTimeline.js"></script>
+		<script src="js/TimeLine/TimelineColors.js"></script>
+
 	</head>
 	<body style="background-color: #dddddd;height: 100%;" onload="init()">
 		<div id="view" class="view-div">
@@ -52,9 +57,7 @@
 					</div>
 					<div id="explore-shared" class="shared-view">
 						<div id="explore-timeline" class="timeline-view expandible">
-							<div id="explore-buttons-container">
-								
-							</div>
+							<div id="explore-buttons-container"></div>
 						</div>
 						<div id="explore-map" class="map-view expandible"></div>
 						<div id="explore-force" class="force-view expandible"></div>
@@ -73,7 +76,9 @@
 
 					</div>
 					<div id="compare-shared" class="shared-view">
-						<div id="compare-timeline" class="timeline-view expandible"></div>
+						<div id="compare-timeline" class="timeline-view expandible">
+							<div id="compare-buttons-container"></div>
+						</div>
 						<div id="compare-map" class="map-view expandible"></div>
 						<div id="compare-force" class="force-view expandible"></div>
 					</div>

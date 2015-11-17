@@ -1,4 +1,4 @@
-function StaticStreamGraph ( where, data, title ) { 
+function DynamicStreamGraph ( where, data, title, start, end ) { 
 
   var width = $( where ).width(),
       height = $( where ).height();
@@ -21,7 +21,6 @@ function StaticStreamGraph ( where, data, title ) {
       .style( "font-size", "4vmin")
       .style( "pointer-events", "none" )
       .text( title );
-
 
 
   var x = d3.time.scale()
@@ -53,25 +52,28 @@ function StaticStreamGraph ( where, data, title ) {
   var area = d3.svg.area()
       .interpolate( "cardinal" )
       .x( function( d ) { return x( d.date ); } )
-      .y0(function( d ) { return y( d.y0 - height / 20 ); } )
-      .y1(function( d ) { return y( d.y0 - height / 20 + d.y ); } );
+      .y0(function( d ) { return y( d.y0 ); } )
+      .y1(function( d ) { return y( d.y0 + d.y ); } );
 
 
   var layers = stack( nest.entries( data ) );
 
   layers0 = layers.map( function ( d, i ) {
     return { key: d.key, values: d.values.map( function ( a ) {
-      return { date: a.date, name: a.name, y: 0, y0: 0, value: a.value, color: staticTimelineColors[ i ] };
+      return { date: a.date, name: a.name, y: 0, y0: 0, value: a.value, color: a.color };
     } ) };
   } );
 
   layers = layers.map( function ( d, i ) {
     return { key: d.key, values: d.values.map( function ( a ) {
-      return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: staticTimelineColors[ i ] };
+      return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: a.color };
     } ) };
   } );
 
-  x.domain( d3.extent( data, function ( d ) { return d.date; } ) );
+  var startDate = new Date( start, 1, 1 );
+  var endDate = new Date( end, 1, 1 );
+
+  x.domain( [ startDate, endDate ] );
 
   var yMax = d3.max( data, function ( d ) { return d.y0 + d.y; } );
 
@@ -162,41 +164,38 @@ function StaticStreamGraph ( where, data, title ) {
     .attr( "class", "timeline-remove" )
     .style( "position", "absolute" )
     .style( "z-index", "20" )
-    .style( "visibility", "hidden" )
     .style( "pointer-events", "none" )
+    .style( "visibility", "hidden" )
     .style( "top", -10 + "px" )
     .style( "left", width / 2 + width / 8 + "px" );
 
-  var vertical = d3.select( where ).append( "div" );
+  var vertical = d3.select( where )
+      .append( "div" )
+      .attr( "class", "timeline-remove" )
+      .style( "position", "absolute" )
+      .style( "z-index", "19" )
+      .style( "width", "1px" )
+      .style( "height", height + "px" )
+      .style( "top", "0px" )
+      .style( "bottom", "0px" )
+      .style( "left", "0px" )
+      .style( "background", "#fff" )
+      .style( "visibility", "hidden" );
 
-  if ( data.length != 0 ) {
-    vertical
-        .attr( "class", "timeline-remove" )
-        .style( "position", "absolute" )
-        .style( "z-index", "19" )
-        .style( "width", "1px" )
-        .style( "height", height + "px" )
-        .style( "top", "0px" )
-        .style( "bottom", "0px" )
-        .style( "left", "0px" )
-        .style( "background", "#fff" )
-        .style( "visibility", "hidden" );
-
-    d3.select( where )
-        .on( "mousemove", function () {  
-          mousex = d3.mouse( this );
-          mousex = mousex[ 0 ] - 1;
-          vertical.style( "left", mousex + "px" ).style( "visibility", "visible" ); 
-        } )
-        .on( "mouseover", function () {  
-          mousex = d3.mouse( this );
-          mousex = mousex[ 0 ] - 1;
-          vertical.style( "left", mousex + "px" );
-        } )
-        .on( "mouseout", function () {
-          vertical.style( "visibility", "hidden" );
-        } );
-  }
+  d3.select( where )
+      .on( "mousemove", function () {  
+        mousex = d3.mouse( this );
+        mousex = mousex[ 0 ] - 1;
+        vertical.style( "left", mousex + "px" ).style( "visibility", "visible" ); 
+      } )
+      .on( "mouseover", function () {  
+        mousex = d3.mouse( this );
+        mousex = mousex[ 0 ] - 1;
+        vertical.style( "left", mousex + "px" );
+      } )
+      .on( "mouseout", function () {
+        vertical.style( "visibility", "hidden" );
+      } );
 
   function transition () {
     graph.selectAll( ".timeline-path" )
@@ -232,6 +231,18 @@ function StaticStreamGraph ( where, data, title ) {
 
   this.getPaths = function () {
     return graph.selectAll( ".timeline-path" );
+  }
+
+  this.getData = function () {
+    return data;
+  }
+
+  this.getStart = function () {
+    return start;
+  }
+
+  this.getEnd = function () {
+    return end;
   }
 
   // Animate timeline

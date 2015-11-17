@@ -21,11 +21,17 @@ function StaticTimeline ( where ) {
 
 	var singleGenreGraph; 
 
-	var artistsButton = d3.select( buttonsContainerId ).append( "div" ).attr( "id", artistsButtonId.slice(1) );
+	var artistsButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", artistsButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-active" );
 
 	artistsButton.on( "click", artistsClick );
 
-	var genresButton;
+	var genresButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", genresButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-disabled" );
 
 	var nest = d3.nest().key( function ( d ) { return d.name; } );
 
@@ -43,25 +49,25 @@ function StaticTimeline ( where ) {
 			singleGenreGraph.remove();
 			singleGenreGraph = null
 		}
-		if ( artistsButton ) {
-			artistsButton.remove();
-			artistsButton = null;
-		}
-		// Redraw genres button if missing
-		if ( !genresButton ) {
-			genresButton = d3.select( buttonsContainerId ).append( "div" )
-					.attr( "id", genresButtonId.slice(1) );
-		}
+		
+		artistsButton.remove();
+		artistsButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", artistsButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-disabled" );
+		
+		genresButton.remove();
+		genresButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", genresButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-active" )
+			.on( "click", genresClick );
+		
 		// Draw new graph
 		artistsGraph = new StaticStreamGraph( where, artistPopularity, artistsGraphTitle );
-		// Show and enable buttons
-		genresButton
-			.attr( "visibility", "visible")
-			.on( "click", genresClick );
 		// Enable click on artist
 		artistsGraph.getPaths()
 			.on( "click", onArtistClick );
-
 	} 
 
 	function genresClick () {
@@ -78,21 +84,23 @@ function StaticTimeline ( where ) {
 			singleArtistGraph.remove();
 			singleArtistGraph = null;
 		}
-		if ( genresButton ) {
-			genresButton.remove();
-			genresButton = null;
-		}
-		// Redraw genres button if missing
-		if ( !artistsButton ) {
-			artistsButton = d3.select( buttonsContainerId ).append( "div" )
-					.attr( "id", artistsButtonId.slice(1) );
-		}
+		
+		genresButton.remove();
+		genresButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", genresButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-disabled" );
+		
+		artistsButton.remove();
+		artistsButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", artistsButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-active" )
+			.on( "click", artistsClick );
+
 		// Draw new graph
 		genresGraph = new StaticStreamGraph( where, artistPopularity, genresGraphTitle ); // TODO change with genrePopularity when ready
-		// Show and enable buttons 
-		artistsButton
-			.attr( "visibility", "visible")
-			.on( "click", artistsClick );
+			
 		// Enable click on artist
 		genresGraph.getPaths()
 			.on( "click", onGenreClick );
@@ -134,31 +142,97 @@ function StaticTimeline ( where ) {
 		var color = d.values[ 0 ].color;
 		artistsGraph.remove();
 		artistsGraph = null;
-		if ( !artistsButton ) {
-			artistsButton = d3.select( buttonsContainerId ).append( "div" )
-					.attr( "id", artistsButtonId.slice(1) );
-		}
-		artistsButton
+
+		artistsButton.remove();
+		artistsButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", artistsButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-active" )
 			.on( "click", artistsClick );
+
 		genresButton.remove();
-		genresButton = null;
+		genresButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", genresButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-disabled" );
+
 		singleArtistGraph = new SingleTimelineGraph( where, d, color, artistsGraphTitle + " - " + d.key );
 	}
-
 
 	function onGenreClick ( d ) {
 		var color = d.values[ 0 ].color;
 		genresGraph.remove();
 		genresGraph = null;
-		if ( !genresButton ) {
-			genresButton = d3.select( buttonsContainerId ).append( "div" )
-					.attr( "id", genresButtonId.slice(1) );
-		}
-		genresButton
+
+		genresButton.remove();
+		genresButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", genresButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-active" )
 			.on( "click", genresClick );
+
 		artistsButton.remove();
-		artistsButton = null;
+		artistsButton = d3.select( buttonsContainerId ).append( "div" )
+			.attr( "id", artistsButtonId.slice(1) )
+			.attr( "class", "pure-button" )
+			.attr( "class", "pure-button-disabled" )
+
 		singleGenreGraph = new SingleTimelineGraph( where, d, color, genresGraphTitle + " - " + d.key );
 
+	}
+
+	// If called with no parameter disable highlight
+	// Else highlight given parameter
+	this.highlight = function ( what ) {
+		if ( !what ) {
+			noHighlight();
+			return;
+		}
+		highlightArtist(name)
+	}
+
+	function highlightArtist ( name ) {
+		if ( artistsGraph ) {
+			artistsGraph.getPaths().transition()
+      			.duration( 250 )
+      			.attr( "opacity", function ( d, i ) {
+        			return d.key != name ? 0.07 : 1;
+      			} );
+		} else if ( genresGraph ) {
+			genresGraph.getPaths().transition()
+				.duration( 250 )
+				.attr( "opacity", function ( d, i ) { 
+					return _.contains( d.values[ 0 ].artists, name ) ? 1 : 0.07; // Imagine genres has a list of artists playing that genre
+				} );
+		}
+	}
+
+	function highlightGenre ( name ) {
+		if ( genresGraph ) {
+			genresGraph.getPaths().transition()
+      			.duration( 250 )
+      			.attr( "opacity", function ( d, i ) {
+        			return d.key != name ? 0.07 : 1;
+      			} );
+		} else if ( artistsGraph ) {
+			artistsGraph.getPaths().transition()
+				.duration( 250 )
+				.attr( "opacity", function ( d, i ) { 
+					return _.contains( d.values[ 0 ].genres, name ) ? 1 : 0.07; // Imagine artists has a list of genres he plays
+				} );
+		}
+	}
+
+	function noHighlight () {
+		if ( artistsGraph ) {
+			artistsGraph.getPaths().transition()
+      			.duration( 250 )
+      			.attr( "opacity", 1 );
+		}
+		if ( genresGraph ) {
+			genresGraph.getPaths().transition()
+      			.duration( 250 )
+      			.attr( "opacity", 1 );
+		}
 	}
 }
