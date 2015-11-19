@@ -6,20 +6,37 @@ function getPx(s,Attr) {
 	}
 }
 
+function autoComplete(s,array) {
+	res=[];
+	if (s=="") {
+		return res;
+	}
+	for (var i in array) {
+
+		if (array[i].toUpperCase().indexOf(s.toUpperCase())==0) {
+			res.push({name:array[i]});
+		}
+	}
+	console.log(res)
+	return res;
+}
+
 
 
 var AutoCompleteBox = function(where) {
 	var that = this;
-	
+	this._possibleResults = []
+
 	this._searchFunc = function(d) {
-		console.log("Searching")
-		console.log(d);
+		console.log("Searching"+d)
+		that.showResults(autoComplete(d,that._possibleResults));
 	}
 	
 	
 	this._searchFuncCaller = function() {
-		var res = that._searchFunc(that.inputBox.node().value);
 		that.showResults([])
+		that._searchFunc(that.inputBox.node().value);
+
 	}
 	this.container =  d3.select(where);
 
@@ -41,6 +58,11 @@ var AutoCompleteBox = function(where) {
 
 AutoCompleteBox.prototype.searchFunc = function(func){
 	this._searchFunc = func;
+	return this;
+}
+
+AutoCompleteBox.prototype.possibleResults = function(res){
+	this._possibleResults = res;
 	return this;
 }
 

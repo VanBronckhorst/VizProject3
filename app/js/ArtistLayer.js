@@ -39,11 +39,11 @@ var ArtistLayer = L.Class.extend({
             .attr("preserveAspectRatio","none")
 
         // Find a way to get the size 
-        this.svg.style("position","relative").style("left","-25px").style("top","-25px").style("width","50px").style("height","50px").attr("viewBox","0 0 50 50")
+        this.svg.style("position","relative").style("left","-25px").style("top","-25px").style("width","50px").style("height","50px").attr("viewBox","0 0 100 100")
 		
-		this.svg.append("circle").style("fill","url(#map"+this.artistId+")").attr("cx", 25)
-        .attr("cy", 25)
-        .attr("r", 25)
+		this.svg.append("circle").style("fill","url(#map"+this.artistId+")").attr("cx", 50).attr("class","player1")
+        .attr("cy", 50)
+        .attr("r", 40)
 
         this.update();
         // add a viewreset event listener for updating layer's position, do the latter
