@@ -42,11 +42,23 @@ for i in artistsPerYear.keys():
         if art["name"] in topTen:
             if not(art["name"] in perArtist.keys()):
                 perArtist[art["name"]]=[]
-            res.append({"name":art["name"],"value":art["value"],"date":str(i),"decade":decadeForTop[art["name"]]})
-''
-for i in perArtist.keys():
-    res.append(perArtist[i])
+            res.append({"name":art["name"],"value":art["value"],"date":i,"decade":decadeForTop[art["name"]]})
+
+for i in range(1940,2011):
+    for j in topTen:
+        alreadyThere = False
+        for k in res:
+            if (k["date"]==i and k["name"]==j):
+                alreadyThere = True
+                break
+        if (not alreadyThere):
+            res.append({"name":j,"value":"0","date":i,"decade":decadeForTop[j]})
+
+def comparer(x,y):
+    return (topTen.index(x["name"]) - topTen.index(y["name"]))*100 - (y["date"]-x["date"])
+
+orderedRes = sorted(res,cmp = comparer)
 
 import json
 with open("../data/genresStaticData.js", 'w') as csvfile:
-    json.dump(res,csvfile)
+    json.dump(orderedRes,csvfile)
