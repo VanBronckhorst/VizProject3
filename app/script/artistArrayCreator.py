@@ -55,7 +55,7 @@ for i in range(1940,2011):
             res.append({"name":j,"value":"0","date":i,"decade":decadeForTop[j]})
 
 def comparer(x,y):
-    return topTen.index(x["name"]) - topTen.index(y["name"])
+    return (topTen.index(x["name"]) - topTen.index(y["name"]))*100 - (y["date"]-x["date"])
 
 orderedRes = sorted(res,cmp = comparer)
 '''
