@@ -75,6 +75,7 @@ function init() {
     var removerFunction = function(id,player) {
         m.removeArtist(id,player);
         fl.removeArtist({id:id},player);
+        dynamicTimeline.removeArtist( id, player );
     }
 
     listp1.onClick(function (id) {
