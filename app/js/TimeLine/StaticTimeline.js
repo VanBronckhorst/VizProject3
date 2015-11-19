@@ -99,7 +99,7 @@ function StaticTimeline ( where ) {
 			.on( "click", artistsClick );
 
 		// Draw new graph
-		genresGraph = new StaticStreamGraph( where, artistPopularity, genresGraphTitle ); // TODO change with genrePopularity when ready
+		genresGraph = new StaticStreamGraph( where, genresPopularity, genresGraphTitle ); // TODO change with genrePopularity when ready
 			
 		// Enable click on artist
 		genresGraph.getPaths()

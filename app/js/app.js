@@ -16,6 +16,7 @@ function init() {
     var auto2 = new AutoCompleteBox("#autocomplete2")
 
 
+
     var staticTimeline = new StaticTimeline( "#explore-timeline" );
     var dynamicTimeline = new DynamicTimeline( "#compare-timeline" );
     
@@ -107,6 +108,22 @@ function init() {
             d3el.classed("fullscreen", false)
         }
     }
+
+    // Population of static lists
+    var statList = new StaticList("#static-list-p1")
+    var statList2 = new StaticList("#static-list-p2")
+    for (var i in topArtistsNames)
+    {
+        var a = {name:topArtistsNames[i],id:i}
+        statList.addArtist(a)
+        statList2.addArtist(a)
+    }
+
+    var autoStat = new AutoCompleteBox("#explore-autocomplete-p1");
+    var autoStat2 = new AutoCompleteBox("#explore-autocomplete-p2");
+
+    autoStat.possibleResults(topArtistsNames);
+    autoStat2.possibleResults(topArtistsNames);
 
     d3.selectAll(".expandible").classed("fullscreen", false).on("dblclick",expandibleClicked)
 

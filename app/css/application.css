@@ -54,6 +54,7 @@ body {
 	top:0;
 	width: 17%;
 	height: 100%;
+	background-color: rgba(6, 105, 123, 0.53);
 	overflow: hidden;
 }
 
@@ -63,10 +64,19 @@ body {
 	top:0;
 	width: 17%;
 	height: 100%;
+	background-color: #943c32;
 	overflow: hidden;
 }
 
 .autocomplete-compare {
+	position: absolute;
+	left:0;
+	top:50%;
+	width:100%;
+	height:10%;
+	z-index: 100;
+}
+.autocomplete-explore {
 	position: absolute;
 	left:0;
 	top:50%;
@@ -122,15 +132,28 @@ body {
 	overflow: hidden;
 }
 
-.selected-list-div {
+.selected-list-title{
 	position: absolute;
 	top:7%;
-	height: 42%;
+	height: 4%;
+	width: 100%;
+	margin-top: 1%;
+	left:0;
+	font-size: 110%;
+	line-height: 2;
+	text-align: center;
+	font-weight: bold;
+}
+.selected-list-div {
+	position: absolute;
+	top:12%;
+	height: 37%;
 	margin-bottom: 1%;
 	width: 100%;
 	left:0;
 	overflow: scroll;
 }
+
 
 .selected-list-box{
 	position: absolute;
@@ -139,11 +162,44 @@ body {
 	width: 100%;
 	left:0;
 }
-
-.suggested-list-div {
+.suggested-list-title{
 	position: absolute;
 	top:60%;
-	height: 38%;
+	height: 4%;
+	width: 100%;
+	margin-top: 1%;
+	left:0;
+	font-size: 110%;
+	line-height: 2;
+	text-align: center;
+	font-weight: bold;
+}
+.suggested-list-div {
+	position: absolute;
+	top:65%;
+	height: 33%;
+	margin-bottom: 1%;
+	margin-top: 1%;
+	width: 100%;
+	left:0;
+	overflow: scroll;
+}
+.static-list-title{
+	position: absolute;
+	top:60%;
+	height: 4%;
+	width: 100%;
+	margin-top: 1%;
+	left:0;
+	font-size: 110%;
+	line-height: 2;
+	text-align: center;
+	font-weight: bold;
+}
+.static-list-div {
+	position: absolute;
+	top:65%;
+	height: 26%;
 	margin-bottom: 1%;
 	margin-top: 1%;
 	width: 100%;
@@ -176,6 +232,8 @@ body {
 	position: absolute;
 	top:0;
 	left: 0;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	height: 100%;
 	width: 100%;
 }
@@ -183,6 +241,8 @@ body {
 	position: absolute;
 	top:0;
 	left: 0;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	height: 100%;
 	width: 100%;
 }

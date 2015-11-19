@@ -6,7 +6,7 @@ import csv
 artistsPerYear = {}
 
 for i in range(1940,2011):
-    with open("../data/artistsByYear/"+str(i)+'artist.csv', 'rb') as csvfile:
+    with open("../data/genresByYear/"+str(i)+'Genres.csv', 'rb') as csvfile:
         year=[]
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         spamreader.next()
@@ -16,10 +16,11 @@ for i in range(1940,2011):
         artistsPerYear[i]=year
 
 
+
 decadeForTop = {}
 topTen = []
 for i in [1940,1950,1960,1970,1980,1990,2000]:
-    with open("../data/artistsByDecade/"+str(i)+'sArtist.csv', 'rb') as csvfile:
+    with open("../data/GenresByDecade/"+str(i)+'sGenres.csv', 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         spamreader.next()
         j = 0
@@ -32,7 +33,6 @@ for i in [1940,1950,1960,1970,1980,1990,2000]:
 print topTen
 print len(topTen)
 
-
 res=[]
 perArtist = {}
 
@@ -42,11 +42,11 @@ for i in artistsPerYear.keys():
         if art["name"] in topTen:
             if not(art["name"] in perArtist.keys()):
                 perArtist[art["name"]]=[]
-            res.append({"name":art["name"],"value":art["value"],"year":i,"decade":decadeForTop[art["name"]]})
-'''
+            res.append({"name":art["name"],"value":art["value"],"date":str(i),"decade":decadeForTop[art["name"]]})
+''
 for i in perArtist.keys():
     res.append(perArtist[i])
-'''
+
 import json
-with open("../data/artistsStaticData", 'w') as csvfile:
+with open("../data/genresStaticData.js", 'w') as csvfile:
     json.dump(res,csvfile)
