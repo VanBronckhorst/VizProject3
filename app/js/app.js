@@ -16,6 +16,9 @@ function init() {
     var auto2 = new AutoCompleteBox("#autocomplete2")
 
 
+    // Contains id's of selections
+    var player1List = [];
+    var player2List = [];
 
     var staticTimeline = new StaticTimeline( "#explore-timeline" );
     var dynamicTimeline = new DynamicTimeline( "#compare-timeline" );
@@ -29,41 +32,62 @@ function init() {
         }
         })
         .selectedFunc(function(id){
-            dm.artistFromId(id,function(err,data){
-                listp1.addArtist(data);
-                suggp1.addArtist(data);
-                fl.addArtist(data,1);
-                m.addArtist(data,1)
-                dynamicTimeline.addArtist( data, 1 ); 
-                ;})
-        });
+
+             if ( !_.contains( player1List, id ) ) {
+
+                dm.artistFromId(id,function(err,data) {
+
+                    listp1.addArtist(data);
+                    suggp1.addArtist(data);
+                    fl.addArtist(data,1);
+                    m.addArtist(data,1)
+                    dynamicTimeline.addArtist( data, 1 ); 
+                } );
+
+                player1List.push( id );
+
+            }
+        } );
     auto2.searchFunc(function(d){if(d){
-            dm.suggestArtist(d,function(err,data){if(!err){	//console.log(data);
+            dm.suggestArtist(d,function(err,data){if(!err){	
                 auto2.showResults(data["artists"])} },5)
         }
         })
         .selectedFunc(function(id){
-            dm.artistFromId(id,function(err,data){
-                console.log("added")
-                listp2.addArtist(data);
-                suggp2.addArtist(data);
-                fl.addArtist(data,2);
-                m.addArtist(data,2);
-                dynamicTimeline.addArtist( data, 2 );
 
-            })
-        });
+            if ( !_.contains( player2List, id ) ) {
+
+                dm.artistFromId(id,function(err,data){
+                    console.log("added")
+                    listp2.addArtist(data);
+                    suggp2.addArtist(data);
+                    fl.addArtist(data,2);
+                    m.addArtist(data,2);
+                    dynamicTimeline.addArtist( data, 2 );
+                } );
+
+                player2List.push( id );
+
+            }
+        } );
 
     // functions for the selected list
     var removerFunction = function(id,player) {
         m.removeArtist(id,player);
         fl.removeArtist({id:id},player);
+        dynamicTimeline.removeArtist( id, player );
     }
 
     listp1.onClick(function (id) {
+
+        player1List = _.filter( player1List, function ( el ) { return el != id; } );
+
         removerFunction(id,1)
     });
     listp2.onClick(function (id) {
+
+        player2List = _.filter( player2List, function ( el ) { return el != id; } );
+
         removerFunction(id,2)
     });
 

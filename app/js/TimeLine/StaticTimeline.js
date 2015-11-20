@@ -11,7 +11,7 @@ function StaticTimeline ( where ) {
 	var genresButtonId = "#explore-genres-button";
 
 	var artistsGraph;
-	
+
 	var genresGraph = new StaticStreamGraph( where, artistPopularity, genresGraphTitle );
 
 	genresGraph.getPaths()

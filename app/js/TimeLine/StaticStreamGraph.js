@@ -44,6 +44,7 @@ function StaticStreamGraph ( where, data, title ) {
 
   data.forEach( function ( d, i ) {
 
+
     if ( typeof d.date === "string" ) {
       d.date = format.parse( d.date );
     }
