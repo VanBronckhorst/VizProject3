@@ -30,7 +30,29 @@ StaticList.prototype.rearrange = function() {
         el.style("top",top).style("height",h).style("width",w)
     }
 }
+StaticList.prototype.reset = function() {
+    this.elems=[];
+    this.listBox.selectAll("*").remove();
+    this.rearrange();
+}
 
+StaticList.prototype.addGenre = function(genre) {
+    var that=this;
+    var alreadyThere = false;
+    for (var i in this.elems) {
+        var el = this.elems[i];
+        if (el.name == genre){
+            alreadyThere = true;
+        }
+    }
+    if (!alreadyThere) {
+        var el = this.listBox.append("div").attr("class","selected-list-element").on("click",function(){that.onClick(genre)});
+        el.name = genre;
+        var newEl = new StaticGenreElement(el,genre,this)
+        this.elems.push(el);
+        this.rearrange();
+    }
+}
 
 StaticList.prototype.addArtist = function(artist) {
     var that=this;
@@ -55,6 +77,15 @@ var StaticElement = function(d3where,artist,list) {
     this.container = d3where;
     var name = artist.name;
     this.artistId = artist.id;
+    //this.closeBox = this.container.append("i").attr("class","fa fa-close selected-close-box")
+    this.textBox = this.container.append("p").attr("class","fa fa-music selected-text-box").text(name)
+
+}
+var StaticGenreElement = function(d3where,genre,list) {
+    var that=this;
+    this.container = d3where;
+    var name = genre;
+    this.name = genre;
     //this.closeBox = this.container.append("i").attr("class","fa fa-close selected-close-box")
     this.textBox = this.container.append("p").attr("class","fa fa-music selected-text-box").text(name)
 

@@ -17,7 +17,6 @@ function autoComplete(s,array) {
 			res.push({name:array[i]});
 		}
 	}
-	console.log(res)
 	return res;
 }
 
@@ -27,12 +26,15 @@ var AutoCompleteBox = function(where) {
 	var that = this;
 	this._possibleResults = []
 
-	this._searchFunc = function(d) {
+
+
+	this.defaultFunc = function(d) {
 		console.log("Searching"+d)
 		that.showResults(autoComplete(d,that._possibleResults));
 	}
-	
-	
+
+	this._searchFunc = this.defaultFunc;
+
 	this._searchFuncCaller = function() {
 		that.showResults([])
 		that._searchFunc(that.inputBox.node().value);
@@ -51,7 +53,7 @@ var AutoCompleteBox = function(where) {
 	this.top = (this.inputBox.style("height"));
 
 	this.resultsBox = this.container.append("div").attr("class","sugg-results-box").style("width",this.inputW+"px").style("height",parseInt(d3.select("body").style("height"))*0.2+"px")
-						.style("position","absolute").style("left",this.left).style("top","63px")
+						.style("position","absolute").style("left",this.left).style("top",this.inputH)
 						.style("display","none")
 	
 }
@@ -63,6 +65,7 @@ AutoCompleteBox.prototype.searchFunc = function(func){
 
 AutoCompleteBox.prototype.possibleResults = function(res){
 	this._possibleResults = res;
+	this._searchFunc = this.defaultFunc;
 	return this;
 }
 
@@ -86,7 +89,7 @@ AutoCompleteBox.prototype.showResults = function(res){
 		var r = res[i]
 		var resDiv=this.resultsBox.append("div").attr("class","sugg-result-div").text(r["name"]);
 		resDiv.attr("tag",r["id"]);
-		resDiv.on("click",function(){	that.inputBox.node().value = d3.select(this).text();
+		resDiv.on("click",function(){	that.inputBox.node().value = "";
 										that.showResults([]);
 										that._selectedFunc(d3.select(this).attr("tag"))})
 	}

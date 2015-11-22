@@ -39,7 +39,7 @@ var ArtistLayer = L.Class.extend({
             .attr("preserveAspectRatio","none")
 
         // Find a way to get the size 
-        this.svg.style("position","relative").style("left","-25px").style("top","-25px").style("width","50px").style("height","50px").attr("viewBox","0 0 100 100")
+        this.svg.style("position","relative").style("left","-50px").style("top","-50px").style("width","100px").style("height","100px").attr("viewBox","0 0 100 100")
 		
 		this.svg.append("circle").style("fill","url(#map"+this.artistId+")").attr("cx", 50).attr("class","player1")
         .attr("cy", 50)

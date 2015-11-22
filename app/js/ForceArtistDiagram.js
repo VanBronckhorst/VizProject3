@@ -94,8 +94,6 @@ ForceArtistDiagram.prototype.restart = function () {
 
 	this.link.exit().remove();
 
-	console.log(this.nodes)
-
 	this.node = this.node.data(this.nodes);
 
 	this.node.exit().remove();
@@ -196,6 +194,11 @@ ForceArtistDiagram.prototype.addArtist = function(artist,p) {
 			alreadyThere=true;
 			oldNode = n;
 		}
+	}
+
+	if (this.nodes.length > 50) {
+		this.svg.attr("viewBox","-500 -500 2000 2000");
+
 	}
 
 	if (!alreadyThere){

@@ -45,7 +45,7 @@ var ArtistMap = function (where){
 								doubleClickZoom: false,
 								markerZoomAnimation: false,
 								scrollWheelZoom: 'center'
-					}).setView([28.0, -50.0], 5);
+					}).setView([41.88, -87.62], 5);
 	L.control.layers(this.baseMaps,null,{position:"topleft"}).addTo(this.map);
 
 	this.mapDiv.on("click", function() {
@@ -57,17 +57,22 @@ var ArtistMap = function (where){
 }
 
 ArtistMap.prototype.addArtist= function(artist){
-	var location = artist.location["location"];
-	var that = this;
-	
-	var callback = function(res) {
-		var lat=res[0].geometry.location.lat();
-		var lon = res[0].geometry.location.lng();
-		that.addArtistMarker(artist,lat,lon);			
-	};
-	
-	geocodeAddress(location,callback);
+	if (artist.location) {
+		var location = artist.location["location"];
+		var that = this;
 
+		var callback = function (res) {
+			var lat = res[0].geometry.location.lat();
+			var lon = res[0].geometry.location.lng();
+			that.addArtistMarker(artist, lat, lon);
+		};
+		if (artist.location["latlon"]){
+			that.addArtistMarker(artist, artist.location["latlon"]["lat"], artist.location["latlon"]["lon"]);
+		} else {
+			console.log("miss")
+			geocodeAddress(location, callback);
+		}
+	}
 }
 
 ArtistMap.prototype.removeArtist= function(id){
