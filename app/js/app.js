@@ -1,20 +1,22 @@
 /**
  * Created by Filippo on 07/11/15.
  */
+// Global for calling it in play song
+var dm = new DataManager();
 
 function init() {
     // Setting up the objects
-    var dm = new DataManager();
+
     var fl = new ForceArtistDiagram("#compare-force");
-    var fl2 = new ForceArtistDiagram("#explore-force")
+    var fl2 = new ForceArtistDiagram("#explore-force");
     var listp1= new SelectedList("#compare-list-p1");
     var suggp1= new SuggestionList("#suggest-list-p1");
     var suggp2= new SuggestionList("#suggest-list-p2");
     var listp2= new SelectedList("#compare-list-p2");
-    var m = new ArtistMap("#compare-map")
-    var m2 = new ArtistMap("#explore-map")
-    var auto = new AutoCompleteBox("#autocomplete")
-    var auto2 = new AutoCompleteBox("#autocomplete2")
+    var m = new ArtistMap("#compare-map","dynamic");
+    var m2 = new ArtistMap("#explore-map","static");
+    var auto = new AutoCompleteBox("#autocomplete");
+    var auto2 = new AutoCompleteBox("#autocomplete2");
 
 
     // Contains id's of selections
@@ -61,7 +63,9 @@ function init() {
             player2List.push( id );
 
         }
-    }
+    };
+
+
 
     auto.searchFunc(function(d){if(d){
                 dm.suggestArtist(d,function(err,data){if(!err){	//console.log(data);
@@ -180,21 +184,8 @@ function init() {
         }
     }
 
-    // Population of static lists
-    var statList = new StaticList("#static-list-p1")
-    var statList2 = new StaticList("#static-list-p2")
-    for (var i in topArtistsNames)
-    {
-        var a = {name:topArtistsNames[i],id:i}
-        statList.addArtist(a)
-        statList2.addArtist(a)
-    }
 
-    var autoStat = new AutoCompleteBox("#explore-autocomplete-p1");
-    var autoStat2 = new AutoCompleteBox("#explore-autocomplete-p2");
 
-    autoStat.possibleResults(topArtistsNames);
-    autoStat2.possibleResults(topArtistsNames);
 
     // Population static map
     for (var i in topArtists) {
@@ -203,7 +194,36 @@ function init() {
             fl2.addArtist(topArtists[i]);
     }
 
+    // Highlighted content
+    var highCont =d3.select("#highlight-content-p1").on("click",function() { m2.removeHighlight(1); highCont.text("")});
+    var highCont2 =d3.select("#highlight-content-p2").on("click",function() { m2.removeHighlight(2); highCont2.text("")});
     // What to do when user press the artist/genre button in explore
+
+    var autoStat = new AutoCompleteBox("#explore-autocomplete-p1");
+    var autoStat2 = new AutoCompleteBox("#explore-autocomplete-p2");
+
+    var highGenFunc1 = function(sel) {
+        m2.highlightGenre(sel,1)
+        highCont.text(sel);
+    }
+    var highGenFunc2 = function(sel) {
+        m2.highlightGenre(sel,2)
+        highCont2.text(sel);
+    }
+    var highArtFunc1 = function(sel) {
+
+        m2.highlightArtist(sel,1)
+        highCont.text(sel);
+    }
+    var highArtFunc2 = function(sel) {
+        m2.highlightArtist(sel,2)
+        highCont2.text(sel);
+    }
+
+    autoStat.possibleResults(topArtistsNames).selectedFunc(highArtFunc1);
+    autoStat2.possibleResults(topArtistsNames).selectedFunc(highArtFunc2);
+
+
     var butt = new DoubleChoiceButton("#button-p1","Artists","Genres");
     var text = d3.select("#explore-header-p1");
     butt.onClick(function (i) {
@@ -216,7 +236,8 @@ function init() {
 
             }
             text.text("All Artists");
-            autoStat.possibleResults(topArtistsNames);
+            autoStat.possibleResults(topArtistsNames)
+                    .selectedFunc(highArtFunc1);
 
         } else {
             for (var i in topGenresNames)
@@ -225,7 +246,8 @@ function init() {
 
             }
             text.text("All Genres");
-            autoStat.possibleResults(topGenresNames);
+            autoStat.possibleResults(topGenresNames)
+                .selectedFunc(highGenFunc1);
         }
     });
 
@@ -240,17 +262,30 @@ function init() {
                 statList2.addArtist(a)
             }
             text2.text("All Artists")
-            autoStat2.possibleResults(topArtistsNames);
+            autoStat2.possibleResults(topArtistsNames)
+                .selectedFunc(highArtFunc2);;
         } else {
             for (var i in topGenresNames)
             {
                 statList2.addGenre(topGenresNames[i]);
             }
             text2.text("All Genres")
-            autoStat2.possibleResults(topGenresNames);
+            autoStat2.possibleResults(topGenresNames)
+                .selectedFunc(highGenFunc2);;
         }
     });
 
+    // Population of static lists
+    var statList = new StaticList("#static-list-p1")
+    var statList2 = new StaticList("#static-list-p2")
+    for (var i in topArtistsNames)
+    {
+        var a = {name:topArtistsNames[i],id:i}
+        statList.addArtist(a)
+        statList2.addArtist(a)
+    }
+    statList.onClick(highArtFunc1);
+    statList2.onClick(highArtFunc2);
 
 
 

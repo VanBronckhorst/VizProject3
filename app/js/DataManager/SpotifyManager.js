@@ -50,7 +50,16 @@ SpotifyManager.prototype.albumsFromIds = function ( ids ) {
 };
 
 
+SpotifyManager.prototype.playFromArtist = function ( id ) {
+	var url = 'https://';
+	url += this.host;
+	url += this.api_path;
+	url += 'artists/';
+	url += id;
+	url += "/top-tracks?country=US";
 
+	return httpGet( url );
+}
 
 
 

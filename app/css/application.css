@@ -163,6 +163,29 @@ body {
 	text-align: center;
 	font-weight: bold;
 }
+.highlight-title{
+	position: absolute;
+	top:0%;
+	height: 4%;
+	width: 100%;
+	margin-top: 1%;
+	left:0;
+	font-size: 110%;
+	line-height: 2;
+	text-align: center;
+	font-weight: bold;
+}
+.highlight-content {
+	position: absolute;
+	top:5%;
+	height: 4%;
+	width: 100%;
+	left:0;
+	line-height: 2;
+	text-align: left;
+	font-weight: bold;
+}
+
 .selected-list-div {
 	position: absolute;
 	top:12%;
@@ -181,6 +204,10 @@ body {
 	width: 100%;
 	left:0;
 }
+.selected-list-box p{
+	margin: 0;
+}
+
 .suggested-list-title{
 	position: absolute;
 	top:60%;
@@ -359,4 +386,45 @@ body {
 	box-shadow: inset 0 0 0 1px rgba(108, 48, 0, 0.92),inset 0 5px 30px rgba(108, 48, 0, 0.92);
 }
 
+.eventPopup {
+	background-color: white;
+	border-radius: 5%;
+	padding: 2%;
+	background-color: #D9853B;
+}
 
+.popup-title {
+	text-align: center;
+	font-weight: bold;
+	width: 96%;
+	height: 10%;
+	font-size: 150%;
+}
+.popup-image {
+	text-align: center;
+	font-weight: bold;
+
+	width: 96%;
+	height: 20%;
+
+}
+
+.popup-image img{
+	max-width:100%;
+	max-height:100%;
+}
+
+.popup-genres-title {
+	text-align: center;
+	font-weight: bold;
+
+	width: 96%;
+	height: 10%;
+}
+.popup-genres-div {
+	text-align: left;
+	font-weight: normal;
+	overflow: scroll;
+	width: 96%;
+	height: 30%;
+}

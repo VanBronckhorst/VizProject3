@@ -14,7 +14,7 @@ function autoComplete(s,array) {
 	for (var i in array) {
 
 		if (array[i].toUpperCase().indexOf(s.toUpperCase())==0) {
-			res.push({name:array[i]});
+			res.push({name:array[i],id:array[i]});
 		}
 	}
 	return res;

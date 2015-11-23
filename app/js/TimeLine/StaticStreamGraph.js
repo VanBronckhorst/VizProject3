@@ -62,12 +62,14 @@ function StaticStreamGraph ( where, data, title ) {
 
   layers0 = layers.map( function ( d, i ) {
     return { key: d.key, values: d.values.map( function ( a ) {
+      colorForGenre[a.name.toUpperCase()] = staticTimelineColors(i);
       return { date: a.date, name: a.name, y: 0, y0: 0, value: a.value, color: staticTimelineColors(i)  };
     } ) };
   } );
 
   layers = layers.map( function ( d, i ) {
     return { key: d.key, values: d.values.map( function ( a ) {
+      colorForGenre[a.name.toUpperCase()] = staticTimelineColors(i);
       return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: staticTimelineColors(i) };
     } ) };
   } );

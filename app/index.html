@@ -15,6 +15,7 @@
 		<link rel="stylesheet" type="text/css" href="css/ArtistMap.css">
 
 		<link rel="stylesheet" type="text/css" href="css/timeLineStyle.css">
+		<script src="js/Audio.js"></script>
 		<script src="js/DoubleChoiceButton.js"></script>
 		<script src="js/StaticList.js"></script>
 		<script src="js/SelectedList.js"></script>
@@ -24,7 +25,7 @@
 		<script src="js/AutoCompleteBox.js"></script>
 		<script src="js/ForceArtistDiagram.js"></script>
 		<script src="js/ArtistMap.js"></script>
-		<script src="js/app.js"></script>
+
 
 
 		<script src="js/Util/resize.js"></script>
@@ -48,12 +49,15 @@
 		<script src="js/TimeLine/DynamicTimeline.js"></script>
 		<script src="js/TimeLine/TimelineColors.js"></script>
 
+		<script src="js/app.js"></script>
 	</head>
 	<body style="background-color: #dddddd;height: 100%;" onload="init()">
 		<div id="view" class="view-div">
 			<div id="main" class="main-div">
 				<div id="explore-view" class="explore-view">
 					<div id="explore-p1" class="player1-view">
+						<div class="highlight-title">Highlighted:</div>
+						<div class="highlight-content" id="highlight-content-p1"></div>
 						<div class="static-list-title" id="explore-header-p1">All Artists</div>
 						<div class="button-explore" id="button-p1"></div>
 						<div id="explore-autocomplete-p1" class="autocomplete-explore"></div>
@@ -68,6 +72,8 @@
 						<div id="explore-force" class="force-view expandible"></div>
 					</div>
 					<div id="explore-p2" class="player2-view">
+						<div class="highlight-title">Highlighted:</div>
+						<div class="highlight-content" id="highlight-content-p2"></div>
 						<div class="static-list-title" id="explore-header-p2">All Artists</div>
 						<div class="button-explore" id="button-p2"></div>
 						<div id="explore-autocomplete-p2" class="autocomplete-explore"></div>

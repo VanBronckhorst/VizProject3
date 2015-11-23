@@ -46,7 +46,7 @@ StaticList.prototype.addGenre = function(genre) {
         }
     }
     if (!alreadyThere) {
-        var el = this.listBox.append("div").attr("class","selected-list-element").on("click",function(){that.onClick(genre)});
+        var el = this.listBox.append("div").attr("class","selected-list-element").on("click",function(){that._onClick(genre["name"])});
         el.name = genre;
         var newEl = new StaticGenreElement(el,genre,this)
         this.elems.push(el);
@@ -64,7 +64,7 @@ StaticList.prototype.addArtist = function(artist) {
         }
     }
     if (!alreadyThere) {
-        var el = this.listBox.append("div").attr("class","selected-list-element").on("click",function(){that.onClick(artist)});
+        var el = this.listBox.append("div").attr("class","selected-list-element").on("click",function(){that._onClick(artist["name"])});
         el.artistId = artist.id
         var newEl = new StaticElement(el,artist,this)
         this.elems.push(el);

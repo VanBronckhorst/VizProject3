@@ -12,3 +12,4 @@ var dynamicTimelineColorsRed = [ "#B30000", "#BF0000", "#CC0000", "#D80000", "#E
 var dynamicTimelineColorsMixed = [ "#980043", "#A50047", "#B2004D", "#BF0052", "#CC0058",
 							       "#D8005D", "#E50063", "#F20068", "#FF006E", "#FC0D6E" ];
 
+colorForGenre = {};
