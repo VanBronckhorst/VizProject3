@@ -65,6 +65,36 @@ function init() {
         }
     };
 
+    var genreSelFunc1 = function(genre) {
+        if (!_.contains(player1List, genre)) {
+            dm.bestArtists(genre,function(err ,data) {
+                if (!err) {
+                    console.log(data)
+                    for (var i in data) {
+                        var a = data[i];
+                        fl.addArtist(a,1);
+                        m.addArtist(a,1);
+                    }
+                }
+            })
+
+        }
+    }
+    var genreSelFunc2 = function(genre) {
+        if (!_.contains(player1List, genre)) {
+            dm.bestArtists(genre,function(err ,data) {
+                if (!err) {
+                    console.log(data)
+                    for (var i in data) {
+                        var a = data[i];
+                        fl.addArtist(a,2);
+                        m.addArtist(a,2);
+                    }
+                }
+            })
+
+        }
+    }
 
 
     auto.searchFunc(function(d){if(d){
@@ -97,7 +127,8 @@ function init() {
 
         } else {
             //text.text("All Genres");
-            auto.possibleResults(allGenresOnlyNames);
+            auto.possibleResults(allGenresOnlyNames)
+                .selectedFunc(genreSelFunc1);
         }
     });
 
@@ -116,7 +147,8 @@ function init() {
 
         } else {
             //text.text("All Genres");
-            auto2.possibleResults(allGenresOnlyNames);
+            auto2.possibleResults(allGenresOnlyNames)
+                .selectedFunc(genreSelFunc2);;
         }
     });
 
@@ -290,17 +322,35 @@ function init() {
     // Decades
 
     addDecade = function(dec,p){
+        toHigh = [];
         for (var i in artistsPerDecade[parseInt(dec)]) {
-            var a = artistsPerDecade[parseInt(dec)];
+            var a = artistsPerDecade[parseInt(dec)][i];
             // Find it in the top artists
 
-            for (var j in topArtists) {
-                if (topArtists[j]["name"] == a) {
-                    m2.addArtist()
-                }
-            }
+
+                    toHigh.push(a);
+
         }
+        console.log(toHigh)
+        m2.highlightArtists(toHigh,1);
+
     }
+
+    var decList = d3.select("#decade-list-p1");
+    var decList2 = d3.select("#decade-list-p2");
+    var decs = [1940,1950,1960,1970,1980,1990,2000];
+
+    for (var i in decs) {
+        var y = decs[i];
+        decList.append("p").datum(y).text(y+"s").on("click",function(d) {
+            highCont.text(d+"s");
+            addDecade(d,1)});
+        decList2.append("p").datum(y).text(y+"s").on("click",function(d) {
+            highCont2.text(d+"s");
+            addDecade(d,2)});
+    }
+
+
 
     d3.selectAll(".expandible").classed("fullscreen", false).on("dblclick",expandibleClicked)
 

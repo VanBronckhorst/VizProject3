@@ -13,7 +13,6 @@ function existingBelongs(artist , existingGenresNodes) {
 }
 
 function belongs(artist , genre) {
-  console.log('inHelper');
   for(i=0; i < artist.genres.length; i++) {
     if(artist.genres[i].name == genre) {
       return true;
@@ -23,8 +22,6 @@ function belongs(artist , genre) {
 }
 
 function similarGenres(genre1, genre2) {
-  console.log(stringIntersection(genre1, genre2));
-  console.log(stringIntersection(genre1, genre2).length);
   return stringIntersection(genre1, genre2).length > 2;
 }
 
@@ -62,8 +59,6 @@ function stringIntersection2(str1, str2) {
     var equals = [];
     var minLength = 1000;
     var minEqual = "";
-    console.log(splitStr1);
-    console.log(splitStr2);
 
     for (i1 in splitStr1) {
       for (i2 in splitStr2) {

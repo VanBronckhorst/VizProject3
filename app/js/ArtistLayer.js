@@ -1,3 +1,12 @@
+function isIn(s,array) {
+    for (var i in array) {
+        if (s==array[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
 var ArtistLayer = L.Class.extend({
 
     initialize: function (latlng,artist,t,p) {
@@ -113,8 +122,12 @@ var ArtistLayer = L.Class.extend({
                 }
             }
             if (t["type"]== "artist") {
-                console.log(t["value"])
                 if (this.artist["name"]==t["value"]) {
+                    should=true
+                }
+            }
+            if (t["type"]== "manyArtists") {
+                if (isIn(this.artist["name"],t["value"])) {
                     should=true
                 }
             }
@@ -125,8 +138,8 @@ var ArtistLayer = L.Class.extend({
 
     },
     resetHighlight: function() {
-        this.svg.style("opacity",1);
-        this.svg.style("z-index",1);
+        this.cont.style("opacity",1);
+        this.cont.style("z-index",1);
     }
 });
 
@@ -151,7 +164,6 @@ function artistPopup(){
     this.show = function(x,y){
         y = (parseFloat(y)+10);
         totH = parseFloat(d3.select("body").style("height"));
-        console.log(y,totH/2)
         var toChange = y>totH/2?"bottom":"top";
         var toAuto = y>totH/2?"top":"bottom";
         y = toChange=="bottom"?totH-y:y
