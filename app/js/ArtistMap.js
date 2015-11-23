@@ -1,16 +1,22 @@
-var ArtistMap = function (where){
+var ArtistMap = function (where,type){
 	var that=this;
+	this.type = type;
+
 	//INIT SECTION - Initiate the DIV for the map
 	this.mapId = "map"+ parseInt(Math.random()*10000);
 	this.mapDiv = d3.select(where).append("div").attr("id",this.mapId).attr("class","map-div");
 	this.observers = [];
-	this.artistMarkers = []
+	this.artistMarkers = [];
+	// Things highlighted by p1 and p2
+	this.highlight=[]
+	this.highlight[1] = {type:"null"};
+	this.highlight[2] = {type:"null"};
 
 	this.addObserver = function(obs){
 		this.observers.push(obs);
 	}
 	//TILES CREATION	
-	
+
 	
 	this.outdoorTile= L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -45,7 +51,7 @@ var ArtistMap = function (where){
 								doubleClickZoom: false,
 								markerZoomAnimation: false,
 								scrollWheelZoom: 'center'
-					}).setView([28.0, -50.0], 5);
+					}).setView([41.88, -87.62], 5);
 	L.control.layers(this.baseMaps,null,{position:"topleft"}).addTo(this.map);
 
 	this.mapDiv.on("click", function() {
@@ -56,18 +62,21 @@ var ArtistMap = function (where){
 
 }
 
-ArtistMap.prototype.addArtist= function(artist){
-	var location = artist.location["location"];
-	var that = this;
-	
-	var callback = function(res) {
-		var lat=res[0].geometry.location.lat();
-		var lon = res[0].geometry.location.lng();
-		that.addArtistMarker(artist,lat,lon);			
-	};
-	
-	geocodeAddress(location,callback);
-
+ArtistMap.prototype.addArtist= function(artist,p){
+	if (artist.location) {
+		var location = artist.location["location"];
+		var that = this;
+		var callback = function (res) {
+			var lat = res[0].geometry.location.lat();
+			var lon = res[0].geometry.location.lng();
+			that.addArtistMarker(artist, lat, lon,p);
+		};
+		if (artist.location["latlon"]){
+			that.addArtistMarker(artist, artist.location["latlon"]["lat"], artist.location["latlon"]["lon"]),p;
+		} else {
+			geocodeAddress(location, callback);
+		}
+	}
 }
 
 ArtistMap.prototype.removeArtist= function(id){
@@ -80,9 +89,35 @@ ArtistMap.prototype.removeArtist= function(id){
 	}
 }
 
-ArtistMap.prototype.addArtistMarker= function(artist,lat,lon){
-	var marker	= new ArtistLayer([lat, lon],artist)
+ArtistMap.prototype.addArtistMarker= function(artist,lat,lon,p){
+	var marker	= new ArtistLayer([parseFloat(lat)+Math.random()*0.05-0.025, parseFloat(lon)+Math.random()*0.05-0.025],artist,this.type,p)
 	this.artistMarkers.push(marker);
 	//marker.options.title = artist.name;
 	this.map.addLayer(marker);
+}
+
+ArtistMap.prototype.highlightGenre = function (genre,p) {
+	this.highlight[p]={type:"genre",value:genre}
+	for (var i in this.artistMarkers) {
+		this.artistMarkers[i].highlight([this.highlight[1],this.highlight[2]]);
+
+	}
+}
+
+ArtistMap.prototype.highlightArtist = function (id,p) {
+	this.highlight[p]={type:"artist",value:id}
+	for (var i in this.artistMarkers) {
+		this.artistMarkers[i].highlight([this.highlight[1],this.highlight[2]]);
+	}
+}
+
+ArtistMap.prototype.removeHighlight = function(p){
+	this.highlight[p]= {type:"null"}
+
+	if (this.highlight[1]["type"]=="null" && this.highlight[2]["type"]=="null") {
+
+		for (var i in this.artistMarkers) {
+			this.artistMarkers[i].resetHighlight();
+		}
+	}
 }

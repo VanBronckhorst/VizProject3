@@ -121,3 +121,21 @@ DataManager.prototype.similarArtists = function ( artistsId, callback) {
     
     this.echoNestManager.similarArtists( artistsId, callback );
 };
+
+DataManager.prototype.playSomething = function(artistId) {
+	var artist = new Artist();
+
+	var that = this;
+
+	this.echoNestManager.completeProfileFromId( artistId )
+			.then( function ( json ) {
+				artist.artistFromEchoJSON( json );
+
+				that.spotifyManager.playFromArtist( artist.spotId )
+						.then( function ( json ) {
+							if (json["tracks"].length > 0) {
+								window.Player.playForTrack(json["tracks"][0]);
+							}
+						} );
+	});
+}
