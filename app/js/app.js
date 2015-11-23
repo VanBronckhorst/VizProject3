@@ -287,7 +287,20 @@ function init() {
     statList.onClick(highArtFunc1);
     statList2.onClick(highArtFunc2);
 
+    // Decades
 
+    addDecade = function(dec,p){
+        for (var i in artistsPerDecade[parseInt(dec)]) {
+            var a = artistsPerDecade[parseInt(dec)];
+            // Find it in the top artists
+
+            for (var j in topArtists) {
+                if (topArtists[j]["name"] == a) {
+                    m2.addArtist()
+                }
+            }
+        }
+    }
 
     d3.selectAll(".expandible").classed("fullscreen", false).on("dblclick",expandibleClicked)
 

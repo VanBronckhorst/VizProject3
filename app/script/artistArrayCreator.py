@@ -62,6 +62,9 @@ orderedRes = sorted(res,cmp = comparer)
 for i in perArtist.keys():
     res.append(perArtist[i])
 '''
+print decadeForTop
+'''
 import json
 with open("../data/artistsStaticData", 'w') as csvfile:
     json.dump(orderedRes,csvfile)
+'''
