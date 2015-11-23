@@ -12,7 +12,7 @@ function StaticTimeline ( where ) {
 
 	var artistsGraph;
 
-	var genresGraph = new StaticStreamGraph( where, artistPopularity, genresGraphTitle );
+	var genresGraph = new StaticStreamGraph( where, genresPopularity, genresGraphTitle );
 
 	genresGraph.getPaths()
 		.on( "click", onGenreClick );
