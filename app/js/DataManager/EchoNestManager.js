@@ -84,6 +84,13 @@ EchoNestManager.prototype.completeProfileFromId = function ( id ) {
     return httpGet( this.prepareURL( 'artist', 'profile', { id: id, bucket: bucket } ) );  
 };
 
+EchoNestManager.prototype.bestArtistsFromGenre = function ( genre ) {
+
+    var bucket = [ 'genre', 'artist_location', 'terms', 'id:spotify' ];
+
+    return httpGet( this.prepareURL( 'genre', 'artists', { name: genre, bucket: bucket,results:10 } ) );
+};
+
 EchoNestManager.prototype.similarArtists = function ( id, callback ) {
 
     httpGet( this.prepareURL( 'artist', 'similar', { id: id } ) )

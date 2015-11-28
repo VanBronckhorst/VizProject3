@@ -110,12 +110,18 @@ ArtistMap.prototype.highlightArtist = function (id,p) {
 		this.artistMarkers[i].highlight([this.highlight[1],this.highlight[2]]);
 	}
 }
+ArtistMap.prototype.highlightArtists = function (ids,p) {
+	this.highlight[p]={type:"manyArtists",value:ids}
+	for (var i in this.artistMarkers) {
+		this.artistMarkers[i].highlight([this.highlight[1],this.highlight[2]]);
+	}
+}
 
 ArtistMap.prototype.removeHighlight = function(p){
-	this.highlight[p]= {type:"null"}
+	this.highlight[p]= {type:"null"};
 
 	if (this.highlight[1]["type"]=="null" && this.highlight[2]["type"]=="null") {
-
+		console.log(this.highlight[2]["type"])
 		for (var i in this.artistMarkers) {
 			this.artistMarkers[i].resetHighlight();
 		}

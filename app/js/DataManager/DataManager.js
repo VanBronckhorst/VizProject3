@@ -14,6 +14,9 @@ var DataManager = function () {
 
 	this.searchedArtists = {}; // Cache to avoid queries over previously fetched artists
 
+	this.searchedGenres = {};
+
+	this.partialRes = {};
 
 };
 
@@ -110,6 +113,74 @@ DataManager.prototype.artistFromId = function ( id, callback ) {
 	} );
 };
 
+DataManager.prototype.bestArtists = function (g,callback) {
+	g = g.toLowerCase();
+	if ( this.searchedGenres[ g ] ) {
+		console.log( 'Retrieve cached artist' );
+		callback( null, this.searchedGenres[ g ] );
+		return;
+	}
+
+	var artists = [];
+	for (var i=0;i<10;i++) {
+		artists[i]=new Artist();
+	}
+	this.partialRes[g] = {call:callback,res:[]};
+	var that = this;
+
+	this.echoNestManager.bestArtistsFromGenre( g)
+			.then( function ( json ) {
+				that.chosenGenres.push(g);
+				var artistsj = json["artists"];
+
+
+				for (var iii in artists) {
+					// Create scope for dealing with callback in for loop
+					(function (varA,varB){
+						varA.artistFromEchoJSON({artist:varB});
+
+					that.spotifyManager.completeProfileFromId(artists[iii].spotId)
+							.then(function (json) {
+								varA.artistFromSpotifyJSON(json);
+							});
+
+					that.spotifyManager.albumIdsFromId(varA.spotId)
+							.then(function (json) {
+
+								var albumIds = [];
+								for (var i = 0, len = json['items'].length; i < len; ++i) {
+
+									albumIds.push(json['items'][i]['id']);
+								}
+								if (albumIds.length != 0) {
+									that.spotifyManager.albumsFromIds(albumIds)
+											.then(function (json) {
+												varA.albumsFromSpotifyJSON(json);
+												//that.chosenArtists.push(artist);
+												// Cache artist
+
+												that.addRes(g,varA)
+											});
+								} else {
+									that.addRes(g,varA)
+								}
+							})
+							.catch(function (err) {
+								that.addRes(g,varA)
+							});
+				})(artists[iii],artistsj[iii])
+				}
+			} );
+}
+
+DataManager.prototype.addRes = function(g,a) {
+	this.partialRes[g]["res"].push(a);
+	if (this.partialRes[g]["res"].length == 10) {
+		console.log(this.partialRes[g]["res"]);
+		this.partialRes[g]["call"](null,this.partialRes[g]["res"])
+		this.searchedGenres[g] = this.partialRes[g]["res"];
+	}
+}
 
 DataManager.prototype.suggestArtist = function ( s, callback, n ) {
 

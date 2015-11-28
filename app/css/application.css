@@ -95,6 +95,26 @@ body {
 	z-index: 100;
 }
 
+.decade-list {
+	position:absolute;
+	left:0;
+	top:30%;
+	height: 14%;
+	width: 100%;
+	overflow: scroll;
+}
+.decade-title {
+	position:absolute;
+	left:0;
+	top:25%;
+	height: 4%;
+	width: 100%;
+	overflow: scroll;
+	text-align: center;
+	font-weight: bold;
+}
+
+
 .autocomplete-explore {
 	position: absolute;
 	left:0;
@@ -185,6 +205,7 @@ body {
 	text-align: left;
 	font-weight: bold;
 }
+
 
 .selected-list-div {
 	position: absolute;
@@ -335,6 +356,7 @@ body {
 ::-webkit-scrollbar {
 	display: none;
 }
+
 
 .double-button-div {
 	position: absolute;

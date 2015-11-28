@@ -92,9 +92,7 @@ this.link = this.svg.selectAll(".link");
 };
 
 ForceArtistDiagram.prototype.restart = function () {
-  console.log('restarted');
   var that = this;
-  console.log(that.genres);
   //var fill = d3.scale.category20();
 
   this.link = this.link.data(this.links);
@@ -129,7 +127,6 @@ ForceArtistDiagram.prototype.restart = function () {
       if(d.bundled == false) {
         return "grey";
       } else {
-        console.log(d.clusterId);
         return that.fill(d.clusterId);
       }
     }
@@ -158,13 +155,11 @@ ForceArtistDiagram.prototype.restart = function () {
     return d.radius;
   })
   .on('click', function(d) {
-    console.log(d);
     if(d.type == 'genre') {
       for(var clusterIndex in that.clusters) {
         for(var nodeIndex in that.clusters[clusterIndex].nodes) { // SAREBBE MEGLIO SCRIVERE AI NODI A CHE CLUSTER APPARTENGONO PIUTTOSTO CHE FARE QUESTO CASINO
           if(that.clusters[clusterIndex].nodes[nodeIndex].name == d.name) {
             for(var colorNodeIndex in that.clusters[clusterIndex].nodes) {
-              console.log(that.clusters[clusterIndex].nodes[colorNodeIndex]);
               if(that.clusters[clusterIndex].nodes[colorNodeIndex].bundled == false) {
                 that.clusters[clusterIndex].nodes[colorNodeIndex].bundled = true;
               } else {
@@ -177,7 +172,6 @@ ForceArtistDiagram.prototype.restart = function () {
                 if(d.bundled == false) {
                   return "grey";
                 } else {
-                  console.log(d.clusterId);
                   return that.fill(d.clusterId);
                 }
               }
@@ -187,7 +181,6 @@ ForceArtistDiagram.prototype.restart = function () {
         }
       }
     }
-    console.log(that.clusters);
   });
 
 g.append("text")
@@ -251,13 +244,10 @@ ForceArtistDiagram.prototype.removeArtist = function(artist,p) {
             for(i in this.nodes) {
               if(this.nodes[i].name == oldNode.genres[genreIndex].name) {
                 oldGenreNodeIndex = i;
-                console.log(this.nodes[i].clusterId);
-                console.log(oldNode.genres[genreIndex].clusterId);
                 belongingClusterId = this.nodes[i].clusterId;
                 break;
               }
             }
-            console.log(that.genres.indexOf(oldNode.genres[genreIndex]));
             // IMP.! REMOVE NODE FROM THE CLUSTER!
             for(i in that.clusters) {
               if(that.clusters[i].clusterId == belongingClusterId) {
@@ -273,14 +263,11 @@ ForceArtistDiagram.prototype.removeArtist = function(artist,p) {
             //Remove genre node
             that.genres.splice(that.genres.indexOf(oldNode.genres[genreIndex]),1); //remove from genre array
             this.nodes.splice(oldGenreNodeIndex,1);
-            console.log(that.genres);
-            console.log(this.nodes);
 
             // PENSARE SE RIMUOVER ANCHE I CLUSTERS CHE NON ESISTONO PIÙ
           }
         }
 
-        console.log('here');
         // Remove the node (i have to recompute the oldNodeIndex cause can be changed removing genre nodes)
         // PER UN PROGETTO PIÙ SERIO FARE DUE ARRAY DI NODI CON SEMANTICA DIVERSA SEPARATI, O METTERE UN SEPARATORE IN QUALCHE MODO
         for (i in this.nodes){
@@ -302,7 +289,6 @@ ForceArtistDiagram.prototype.removeArtist = function(artist,p) {
             if(d.bundled == false) {
               return "grey";
             } else {
-              console.log(d.clusterId);
               return that.fill(clusterId);
             }
           }
@@ -421,7 +407,6 @@ ForceArtistDiagram.prototype.addGenre = function(newGenre) {
   // QUANDO METTO GENERE CHE C'È GIÀ ME LO AGGIUNGE COMUNQUE DA QUALCHE PARTE
   // OPPURE DA QUALCHE PARTE NON RIMUOVO DA VETTORE GENERE, O AGGIUNGO DUE VOLTE A VETTORE GENERE
   var that = this;
-  console.log(that);
 
   var genreNode = newGenre;
 
@@ -489,7 +474,6 @@ genreNode.bundled = false;
             //console.log('inClusteredFalse');
             var comparedGenreNode = this.nodes[i];
             var clusterName = stringIntersection2(comparedGenreNode.name, genreNode.name);
-            console.log(clusterName);
             if(clusterName != '') {
               for (var j in tempClusters) {
                 if(clusterName == tempClusters[j].name) {
@@ -541,7 +525,6 @@ genreNode.bundled = false;
         }
       }
     }
-    console.log(tempClusters);
     for(c in tempClusters) {
       if(tempClusters[c].count > 1) {
         tempClusters[c].clusterId = clusterIdCounter;
@@ -558,10 +541,8 @@ genreNode.bundled = false;
           }
         }
       }
-      console.log(that.clusters);
     }
 
-    console.log(that.genres);
     this.restart();
 
   };
