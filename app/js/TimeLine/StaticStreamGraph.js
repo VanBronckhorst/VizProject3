@@ -159,19 +159,22 @@ function StaticStreamGraph ( where, data, title ) {
       .attr( "transform", "translate(0," + height + ")" )
       .call( xAxis );
 
-  var tooltip = d3.select( where ) 
-    .append( "div" )
-    .attr( "class", "timeline-remove" )
-    .style( "position", "absolute" )
-    .style( "z-index", "20" )
-    .style( "visibility", "hidden" )
-    .style( "pointer-events", "none" )
-    .style( "top", -10 + "px" )
-    .style( "left", width / 2 + width / 8 + "px" );
+  var tooltip = d3.select( where ).append( "div" );
+    
 
   var vertical = d3.select( where ).append( "div" );
 
   if ( data.length != 0 ) {
+
+  	tooltip
+  		.attr( "class", "timeline-remove" )
+	    .style( "position", "absolute" )
+	    .style( "z-index", "20" )
+	    .style( "visibility", "hidden" )
+	    .style( "pointer-events", "none" )
+	    .style( "top", -10 + "px" )
+	    .style( "left", width / 2 + width / 8 + "px" );
+
     vertical
         .attr( "class", "timeline-remove" )
         .style( "position", "absolute" )
