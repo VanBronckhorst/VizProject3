@@ -4,6 +4,7 @@
 	font-size: 16px;
 	font-family: 'FontAwesome';
 	font-size: 3vmin;
+	line-height: 6vmin;
 }
 .sugg-results-box{
 	border-bottom: #999 solid 1px;

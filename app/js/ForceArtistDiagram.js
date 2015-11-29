@@ -215,6 +215,7 @@ ForceArtistDiagram.prototype.removeArtist = function(artist,p) {
    var start = oldNode.player.indexOf("player" + p)==0?8:0
    var end = oldNode.player.indexOf("player" + p)==0?15:7
    oldNode.player = oldNode.player.slice(start,end);
+
    if (oldNode.player.length==0) {
           // Remove links to the node
           var j=0;

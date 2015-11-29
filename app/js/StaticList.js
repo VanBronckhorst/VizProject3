@@ -46,7 +46,7 @@ StaticList.prototype.addGenre = function(genre) {
         }
     }
     if (!alreadyThere) {
-        var el = this.listBox.append("div").attr("class","selected-list-element").on("click",function(){that._onClick(genre["name"])});
+        var el = this.listBox.append("div").attr("class","selected-list-element").on("click",function(){that._onClick(genre)});
         el.name = genre;
         var newEl = new StaticGenreElement(el,genre,this)
         this.elems.push(el);

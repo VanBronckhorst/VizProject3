@@ -16,6 +16,7 @@ var ArtistLayer = L.Class.extend({
         this.artist = artist;
         this.type = t;
         this.player = p==2?2:1;
+        this.shared = false;
     },
 
     onAdd: function (map) {
@@ -56,6 +57,14 @@ var ArtistLayer = L.Class.extend({
         this.svg.style("position","relative").attr("viewBox","0 0 100 100")
         this.goSmall();
 
+        this.defs = this.svg.append("svg:defs");
+
+        var grad = this.defs.append("defs").append("linearGradient").attr("id", "bothMap")
+            .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        grad.append("stop").attr("offset", "50%").style("stop-color", "#779ECB");
+        grad.append("stop").attr("offset", "50%").style("stop-color", "#C23B22");
+
+
         // Assign the stroke to be of the color of the genre of the artist
         var stroke = "transparent";
         for (i in this.artist["genres"]) {
@@ -66,7 +75,7 @@ var ArtistLayer = L.Class.extend({
         }
 
         var artist = this.artist;
-		var circle = this.svg.append("circle").style("fill","url(#map"+this.artistId+")").attr("cx", 50).attr("class","player"+this.player)
+		this.circle = this.svg.append("circle").style("fill","url(#map"+this.artistId+")").attr("cx", 50).attr("class","player"+this.player)
             .on("click",function(ev)
                             {
                                 globalPopup.update(artist);
@@ -76,7 +85,7 @@ var ArtistLayer = L.Class.extend({
         .attr("r", 40)
 
         if (this.type == "static") {
-            circle.style("stroke",stroke);
+            this.circle.style("stroke",stroke);
         }
 
         this.update();
@@ -140,6 +149,24 @@ var ArtistLayer = L.Class.extend({
     resetHighlight: function() {
         this.cont.style("opacity",1);
         this.cont.style("z-index",1);
+    },
+    addPlayer : function(p) {
+
+        if (this.player != p) {
+            this.shared = true;
+            this.circle.style("stroke","url(#bothMap)");
+        }
+
+    },
+    removePlayer : function(p) {
+        if (this.shared) {
+            this.shared = false;
+            this.player = p==2 ? 1:2;
+            this.circle.style("stroke",null).attr("class","player"+this.player);
+            return false;
+        }else {
+            return true;
+        }
     }
 });
 
@@ -150,8 +177,8 @@ function artistPopup(){
 
         .style("position","absolute")
         .style("left","0px").style("top","0px")
-        .style("width",parseFloat(d3.select("body").style("width"))*0.3)
-        .style("height",parseFloat(d3.select("body").style("height"))*0.5)
+        .style("width",parseFloat(d3.select("body").style("width"))*0.2)
+        .style("height",parseFloat(d3.select("body").style("height"))*0.3)
         .style("z-index","1002")
 
  /*   $(document).mouseup(function (e)
