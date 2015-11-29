@@ -193,7 +193,7 @@ DataManager.prototype.similarArtists = function ( artistsId, callback) {
     this.echoNestManager.similarArtists( artistsId, callback );
 };
 
-DataManager.prototype.playSomething = function(artistId) {
+DataManager.prototype.playSomething = function(artistId,callback) {
 	var artist = new Artist();
 
 	var that = this;
@@ -206,6 +206,7 @@ DataManager.prototype.playSomething = function(artistId) {
 						.then( function ( json ) {
 							if (json["tracks"].length > 0) {
 								window.Player.playForTrack(json["tracks"][0]);
+								callback(json["tracks"][0]);
 							}
 						} );
 	});

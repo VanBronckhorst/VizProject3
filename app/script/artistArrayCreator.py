@@ -1,6 +1,6 @@
 __author__ = 'Filippo'
 
-
+''' Only top
 import csv
 
 artistsPerYear = {}
@@ -59,12 +59,34 @@ def comparer(x,y):
 
 orderedRes = sorted(res,cmp = comparer)
 '''
+'''
 for i in perArtist.keys():
     res.append(perArtist[i])
 '''
-print decadeForTop
-'''
+import csv
+
+artistsPerYear = {}
+
+for i in range(1940,2011):
+    with open("../data/artistsByYear/"+str(i)+'artist.csv', 'rb') as csvfile:
+        year=[]
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        spamreader.next()
+        for row in spamreader:
+            if row[0] != "Artist":
+                year.append({"name":row[0].decode('latin-1').encode("utf-8"),"value":row[1]})
+        artistsPerYear[i]=year
+
+allData = {}
+
+for year in artistsPerYear.keys():
+    for t in artistsPerYear[year]:
+        if t["name"] in allData.keys():
+            allData[t["name"]].append({"year":year,"value":t["value"]})
+        else:
+            allData[t["name"]] = [{"year":year,"value":t["value"]}]
+
+
 import json
-with open("../data/artistsStaticData", 'w') as csvfile:
-    json.dump(orderedRes,csvfile)
-'''
+with open("../data/allArtistsStaticData", 'w') as csvfile:
+    json.dump(allData,csvfile)

@@ -178,7 +178,7 @@ function artistPopup(){
         .style("position","absolute")
         .style("left","0px").style("top","0px")
         .style("width",parseFloat(d3.select("body").style("width"))*0.2)
-        .style("height",parseFloat(d3.select("body").style("height"))*0.3)
+        .style("height",parseFloat(d3.select("body").style("height"))*0.4)
         .style("z-index","1002")
 
  /*   $(document).mouseup(function (e)
@@ -210,7 +210,11 @@ function artistPopup(){
         for (i in artist["genres"]) {
             list.append("p").text(artist["genres"][i]["name"].capitalize())
         }
-        dm.playSomething(artist["id"])
+        var that=this;
+        dm.playSomething(artist["id"],function(song) {
+            that.popup.append("div").attr("class","popup-playing-title").text("Playing:")
+            that.popup.append("div").attr("class","popup-playing-div").text(song["name"])
+        })
     }
 
 }

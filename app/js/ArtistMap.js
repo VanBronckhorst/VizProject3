@@ -50,10 +50,15 @@ var ArtistMap = function (where,type){
 	this.map = L.map(this.mapId,{layers: [this.outdoorTile],
 								doubleClickZoom: false,
 								markerZoomAnimation: false,
-								scrollWheelZoom: 'center'
+								scrollWheelZoom: 'center',
+								zoom: 3,
+								minZoom: 2,
+								maxZoom: 16,
+								zoomControl: false
 					}).setView([41.88, -87.62], 5);
 	L.control.layers(this.baseMaps,null,{position:"topleft"}).addTo(this.map);
 
+	this.map.addControl(new L.Control.ZoomMin());
 	this.mapDiv.on("click", function() {
 											window.dispatchEvent(new Event('resize'));
 

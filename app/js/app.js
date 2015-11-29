@@ -380,6 +380,7 @@ function init() {
         }
         m2.highlightArtists(toHigh,p);
 
+
     }
 
     var decList = d3.select("#decade-list-p1");
