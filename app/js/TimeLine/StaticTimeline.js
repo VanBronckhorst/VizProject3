@@ -1,5 +1,7 @@
 function StaticTimeline ( where ) {
 	
+	var that = this;
+
 	var artistsGraphTitle = "Top Artists";
 
 	var genresGraphTitle = "Top Genres";
@@ -68,6 +70,10 @@ function StaticTimeline ( where ) {
 		// Enable click on artist
 		artistsGraph.getPaths()
 			.on( "click", onArtistClick );
+		if ( highlightedArtistP1 || highlightedArtistP2 ) {
+			that.highlightArtist();
+		}
+		
 	} 
 
 	function genresClick () {
@@ -110,7 +116,7 @@ function StaticTimeline ( where ) {
 	$( where ).resize( function () {
 		if ( genresGraph ) {
 			genresGraph.remove();
-			genresGraph = new StaticStreamGraph( where, artistPopularity, genresGraphTitle );
+			genresGraph = new StaticStreamGraph( where, genresPopularity, genresGraphTitle );
 			genresGraph.getPaths()
 				.on( "click", onGenreClick );
 
@@ -120,6 +126,9 @@ function StaticTimeline ( where ) {
 			artistsGraph = new StaticStreamGraph( where, artistPopularity, artistsGraphTitle );
 			artistsGraph.getPaths()
 				.on( "click", onArtistClick );
+			if ( highlightedArtistP1 || highlightedArtistP2 ) {
+				that.highlightArtist();
+			}
 
 		}
 		if ( singleArtistGraph ) {
@@ -181,58 +190,145 @@ function StaticTimeline ( where ) {
 
 	}
 
-	// If called with no parameter disable highlight
-	// Else highlight given parameter
-	this.highlight = function ( what ) {
-		if ( !what ) {
-			noHighlight();
+	var highlightedArtistP1;
+
+	var highlightedArtistP2;
+	
+	var highlightedGenreP1;
+
+	var highlightedGenreP2;	
+
+
+	this.removeHighlightArtist = function ( player ) {
+
+		if ( player == 1 ) {
+			highlightedArtistP1 = null;
+		} else if ( player == 2 ) {
+			highlightedArtistP2 = null;
+		}
+		that.highlightArtist( null );
+
+	}
+
+
+	this.highlightArtist = function ( what, player ) {
+
+		if ( what ) {
+			if ( player == 1 ) {
+				highlightedArtistP1 = what;
+			} else if ( player == 2 ) {
+				highlightedArtistP2 = what;
+			}
+		}
+
+		if ( !( highlightedArtistP1 || highlightedArtistP2 ) ) {
+			if ( artistsGraph ) {
+				artistsGraph.remove();
+				artistsGraph = new StaticStreamGraph( where, artistPopularity, artistsGraphTitle );
+				artistsGraph.getPaths()
+					.on( "click", onArtistClick );
+			}
 			return;
 		}
-		highlightArtist(name)
-	}
 
-	function highlightArtist ( name ) {
 		if ( artistsGraph ) {
-			artistsGraph.getPaths().transition()
-      			.duration( 250 )
-      			.attr( "opacity", function ( d, i ) {
-        			return d.key != name ? 0.07 : 1;
-      			} );
+			var paths = artistsGraph.getPaths();
+
+			paths
+				.attr( "opacity", function ( d ) {
+					if ( highlightedArtistP1 == d.key || highlightedArtistP2 == d.key ) {
+						return 1;
+					}
+					return 0.07;
+				} )
+				.attr( "stroke-width", function ( d ) {
+					if ( highlightedArtistP1 == d.key || highlightedArtistP2 == d.key ) {
+						return "0.5px";
+					}
+				} )
+				.attr( "stroke", function ( d ) {
+					if ( highlightedArtistP1 == d.key || highlightedArtistP2 == d.key ) {
+						return "#000000";
+					}
+				} )
+				.on( "mouseover", null )
+				.on( "mousemove", highlightedMousemove )
+				.on( "mouseout", highlightedMouseout )
+				.on( "click", function ( d ) {
+					if ( highlightedArtistP1 == d.key || highlightedArtistP2 == d.key ) {
+						onArtistClick( d );
+					}
+					return null;
+				} );
+
 		} else if ( genresGraph ) {
-			genresGraph.getPaths().transition()
-				.duration( 250 )
-				.attr( "opacity", function ( d, i ) { 
-					return _.contains( d.values[ 0 ].artists, name ) ? 1 : 0.07; // Imagine genres has a list of artists playing that genre
-				} );
+			
 		}
+
 	}
 
-	function highlightGenre ( name ) {
-		if ( genresGraph ) {
-			genresGraph.getPaths().transition()
-      			.duration( 250 )
-      			.attr( "opacity", function ( d, i ) {
-        			return d.key != name ? 0.07 : 1;
-      			} );
-		} else if ( artistsGraph ) {
-			artistsGraph.getPaths().transition()
-				.duration( 250 )
-				.attr( "opacity", function ( d, i ) { 
-					return _.contains( d.values[ 0 ].genres, name ) ? 1 : 0.07; // Imagine artists has a list of genres he plays
-				} );
-		}
-	}
+	var datearray = [];
 
-	function noHighlight () {
+	function highlightedMousemove ( d, i ) {
+
+		var tooltip;
+		var x;
+
 		if ( artistsGraph ) {
-			artistsGraph.getPaths().transition()
-      			.duration( 250 )
-      			.attr( "opacity", 1 );
+			tooltip = artistsGraph.tooltip;
+			x = artistsGraph.x;
+			if (  !( highlightedArtistP1 == d.key || highlightedArtistP2 == d.key ) ) {
+				return;
+			}
 		}
 		if ( genresGraph ) {
-			genresGraph.getPaths().transition()
-      			.duration( 250 )
-      			.attr( "opacity", 1 );
+			tooltip =  genresGraph.tooltip;
 		}
+
+	    mousex = d3.mouse( this );
+	    mousex = mousex[ 0 ];
+	    var invertedx = x.invert( mousex );
+	    invertedx = invertedx.getYear();
+	    var selected = ( d.values );
+	    for ( var k = 0; k < selected.length; ++k ) {
+	      datearray[ k ] = selected[ k ].date;
+	      datearray[ k ] = datearray[ k ].getYear();
+	    }
+
+	    mousedate = datearray.indexOf( invertedx );
+
+	    pro = Math.round( d.values[ mousedate ].value );
+
+	    d3.select( this )
+	    .classed( "hover", true );
+
+	    invertedx = 1900 + invertedx;
+
+	    tooltip.html( "<p>" + d.key + "<br>" + invertedx + "<br>" + pro + "</p>" ).style( "visibility", "visible" );
+  	}
+
+  	function highlightedMouseout ( d, i ) {
+
+  		var tooltip;
+  		var graph;
+
+  		if ( artistsGraph ) {
+  			tooltip = artistsGraph.tooltip;
+  			graph = artistsGraph.getPaths();
+  			if ( ! ( highlightedArtistP1 == d.key || highlightedArtistP2 == d.key ) ) {
+				return;
+			}
+  		}
+
+	   	graph.selectAll( ".static-timeline-path" )
+	    	.transition()
+	    	.duration( 250 )
+	    	.attr( "opacity", "1" );
+		d3.select( this )
+	    	.classed( "hover", false )
+	    	//.attr( "stroke-width", "0px" );
+
+	    tooltip.html( "<p>" + d.key + "<br>" + pro + "</p>" ).style( "visibility", "hidden" );
 	}
+
 }

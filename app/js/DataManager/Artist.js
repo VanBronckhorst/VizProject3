@@ -81,6 +81,9 @@ Artist.prototype.getPopularityOverTime = function () {
 
 Artist.prototype.computePopularity = function () {
 
+	
+
+
 	var startingYear = 1940;
 	var currentYear = 2015;
 

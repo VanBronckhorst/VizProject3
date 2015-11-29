@@ -227,8 +227,16 @@ function init() {
     }
 
     // Highlighted content
-    var highCont =d3.select("#highlight-content-p1").on("click",function() { m2.removeHighlight(1); highCont.text("")});
-    var highCont2 =d3.select("#highlight-content-p2").on("click",function() { m2.removeHighlight(2); highCont2.text("")});
+    var highCont =d3.select("#highlight-content-p1").on("click",function() { 
+        m2.removeHighlight(1); 
+        staticTimeline.removeHighlightArtist( 1 ); 
+        highCont.text("");
+    } );
+    var highCont2 =d3.select("#highlight-content-p2").on("click",function() { 
+        m2.removeHighlight(2);
+        staticTimeline.removeHighlightArtist( 2 );
+        highCont2.text("");
+    } );
     // What to do when user press the artist/genre button in explore
 
     var autoStat = new AutoCompleteBox("#explore-autocomplete-p1");
@@ -246,10 +254,12 @@ function init() {
 
         m2.highlightArtist(sel,1)
         highCont.text(sel);
+        staticTimeline.highlightArtist( sel, 1 );
     }
     var highArtFunc2 = function(sel) {
         m2.highlightArtist(sel,2)
         highCont2.text(sel);
+        staticTimeline.highlightArtist( sel, 2 );
     }
 
     autoStat.possibleResults(topArtistsNames).selectedFunc(highArtFunc1);

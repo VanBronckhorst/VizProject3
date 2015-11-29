@@ -29,7 +29,6 @@ var AutoCompleteBox = function(where) {
 
 
 	this.defaultFunc = function(d) {
-		console.log("Searching"+d)
 		that.showResults(autoComplete(d,that._possibleResults));
 	}
 
