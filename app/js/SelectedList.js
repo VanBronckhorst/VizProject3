@@ -30,14 +30,14 @@ SelectedList.prototype.rearrange = function() {
     }
 }
 
-SelectedList.prototype.removeArtist = function(id) {
+SelectedList.prototype.removeArtist = function(data) {
     for (var i in this.elems) {
         var el = this.elems[i];
-        if (el.artistId == id){
+        if (el.artistId == data.id){
             el.remove();
             this.elems.splice(i,1);
             // callback to observer
-            this._onClick(id);
+            this._onClick(data);
 
             break;
         }
@@ -46,7 +46,7 @@ SelectedList.prototype.removeArtist = function(id) {
 }
 
 SelectedList.prototype.addArtist = function(artist) {
-
+    var that = this;
     var alreadyThere = false;
     for (var i in this.elems) {
         var el = this.elems[i];
@@ -57,20 +57,43 @@ SelectedList.prototype.addArtist = function(artist) {
     if (!alreadyThere) {
         var el = this.listBox.append("div").attr("class","selected-list-element")
         el.artistId = artist.id
+        el.data = {type:"artist",value:artist,id:artist.id};
+        el.datum(el.data);
+        el.on("click",function(d) {that.removeArtist(d);})
         var newEl = new SelectedElement(el,artist,this)
         this.elems.push(el);
         this.rearrange();
     }
 }
 
+SelectedList.prototype.addGenre = function(gen) {
+    var that = this;
+    var alreadyThere = false;
+    for (var i in this.elems) {
+        var el = this.elems[i];
+        if (el.artistId == gen["name"]){
+            alreadyThere = true;
+        }
+    }
+    if (!alreadyThere) {
+        var el = this.listBox.append("div").attr("class","selected-list-element")
+        el.artistId = gen.name;
+        el.data = {type:"genre",value:gen,id: gen.name};
+        el.datum(el.data);
+        el.on("click",function(d) {that.removeArtist(d);})
+        var newEl = new SelectedElement(el,gen,this)
+        this.elems.push(el);
+        this.rearrange();
+    }
+}
+
+
+
 var SelectedElement = function(d3where,artist,list) {
-    var that=this;
+    var that = this;
     this.container = d3where;
     var name = artist.name;
     this.artistId = artist.id;
     //this.closeBox = this.container.append("i").attr("class","fa fa-close selected-close-box")
-    this.textBox = this.container.append("p").attr("class","fa fa-close selected-text-box").text(name)
-                                .on("click",function(){
-                                    list.removeArtist(that.artistId);
-                                });
+    this.textBox = this.container.append("p").attr("class", "fa fa-close selected-text-box").text(name)
 }

@@ -65,36 +65,57 @@ function init() {
         }
     };
 
+    var artistsDataForGenre={}
     var genreSelFunc1 = function(genre) {
         if (!_.contains(player1List, genre)) {
             dm.bestArtists(genre,function(err ,data) {
                 if (!err) {
-                    console.log(data)
+                    listp1.addGenre({name:genre})
                     for (var i in data) {
                         var a = data[i];
                         fl.addArtist(a,1);
                         m.addArtist(a,1);
                     }
+                    artistsDataForGenre[genre] = data;
                 }
             })
 
         }
     }
+
+
     var genreSelFunc2 = function(genre) {
         if (!_.contains(player1List, genre)) {
             dm.bestArtists(genre,function(err ,data) {
                 if (!err) {
-                    console.log(data)
+                    listp2.addGenre({name:genre})
                     for (var i in data) {
                         var a = data[i];
                         fl.addArtist(a,2);
                         m.addArtist(a,2);
                     }
+                    artistsDataForGenre[genre] = data;
                 }
             })
 
         }
     }
+
+    var genreListP1 = new StaticList("#genre-list-p1");
+    var genreListP2 = new StaticList("#genre-list-p2");
+    d3.select("#genre-list-p1").style("visibility","hidden");
+    d3.select("#genre-list-p2").style("visibility","hidden");
+
+
+    // Called Later because super-slow
+    for (var i in topGenresNames)
+    {
+        var a = topGenresNames[i];
+        genreListP1.addGenre(a);
+        genreListP2.addGenre(a);
+    }
+    genreListP1.onClick(genreSelFunc1);
+    genreListP2.onClick(genreSelFunc2);
 
 
     auto.searchFunc(function(d){if(d){
@@ -124,11 +145,14 @@ function init() {
                 }
                 })
                 .selectedFunc(selFunc1);
-
+            d3.select("#genre-list-p1").style("visibility","hidden");
+            d3.select("#suggest-list-p1").style("visibility","visible");
         } else {
             //text.text("All Genres");
             auto.possibleResults(allGenresOnlyNames)
                 .selectedFunc(genreSelFunc1);
+            d3.select("#genre-list-p1").style("visibility","visible");
+            d3.select("#suggest-list-p1").style("visibility","hidden");
         }
     });
 
@@ -144,11 +168,14 @@ function init() {
                 }
                 })
                 .selectedFunc(selFunc2);
-
+            d3.select("#genre-list-p2").style("visibility","hidden");
+            d3.select("#suggest-list-p2").style("visibility","visible");
         } else {
             //text.text("All Genres");
             auto2.possibleResults(allGenresOnlyNames)
-                .selectedFunc(genreSelFunc2);;
+                .selectedFunc(genreSelFunc2);
+            d3.select("#genre-list-p2").style("visibility","visible");
+            d3.select("#suggest-list-p2").style("visibility","hidden");
         }
     });
 
@@ -161,17 +188,33 @@ function init() {
         dynamicTimeline.removeArtist( id, player );
     }
 
-    listp1.onClick(function (id) {
+    listp1.onClick(function (data) {
 
-        player1List = _.filter( player1List, function ( el ) { return el != id; } );
+        player1List = _.filter( player1List, function ( el ) { return el != data.id; } );
 
-        removerFunction(id,1)
+        if (data.type =="artist") {
+            removerFunction(data.id, 1)
+        } else {
+            data = artistsDataForGenre[data.id];
+            for (var i in data) {
+                var a = data[i];
+                removerFunction(a.id,1)
+            }
+        }
     });
-    listp2.onClick(function (id) {
+    listp2.onClick(function (data) {
 
-        player2List = _.filter( player2List, function ( el ) { return el != id; } );
+        player2List = _.filter( player2List, function ( el ) { return el != data.id; } );
 
-        removerFunction(id,2)
+        if (data.type =="artist") {
+            removerFunction(data.id, 2)
+        } else {
+            data = artistsDataForGenre[data.id];
+            for (var i in data) {
+                var a = data[i];
+                removerFunction(a.id,2)
+            }
+        }
     });
 
     // functions for the suggested list
@@ -280,6 +323,7 @@ function init() {
             text.text("All Artists");
             autoStat.possibleResults(topArtistsNames)
                     .selectedFunc(highArtFunc1);
+            statList.onClick(highArtFunc1);
 
         } else {
             for (var i in topGenresNames)
@@ -287,6 +331,7 @@ function init() {
                 statList.addGenre(topGenresNames[i]);
 
             }
+            statList.onClick(highGenFunc1);
             text.text("All Genres");
             autoStat.possibleResults(topGenresNames)
                 .selectedFunc(highGenFunc1);
@@ -305,7 +350,8 @@ function init() {
             }
             text2.text("All Artists")
             autoStat2.possibleResults(topArtistsNames)
-                .selectedFunc(highArtFunc2);;
+                .selectedFunc(highArtFunc2);
+            statList2.onClick(highArtFunc2);
         } else {
             for (var i in topGenresNames)
             {
@@ -314,6 +360,7 @@ function init() {
             text2.text("All Genres")
             autoStat2.possibleResults(topGenresNames)
                 .selectedFunc(highGenFunc2);;
+            statList2.onClick(highGenFunc2);
         }
     });
 
@@ -341,8 +388,8 @@ function init() {
                     toHigh.push(a);
 
         }
-        console.log(toHigh)
-        m2.highlightArtists(toHigh,1);
+        m2.highlightArtists(toHigh,p);
+
 
     }
 
@@ -352,10 +399,12 @@ function init() {
 
     for (var i in decs) {
         var y = decs[i];
-        decList.append("p").datum(y).text(y+"s").on("click",function(d) {
+        var dx = parseInt(i%4) * 25 + "%";
+        var dy = parseInt(i/4)*50 + "%";
+        decList.append("div").attr("class","decade-box").style("top",dy).style("left",dx).datum(y).text(y+"s").on("click",function(d) {
             highCont.text(d+"s");
             addDecade(d,1)});
-        decList2.append("p").datum(y).text(y+"s").on("click",function(d) {
+        decList2.append("div").attr("class","decade-box").style("top",dy).style("left",dx).datum(y).text(y+"s").on("click",function(d) {
             highCont2.text(d+"s");
             addDecade(d,2)});
     }
