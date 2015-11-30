@@ -110,6 +110,10 @@ function StaticTimeline ( where ) {
 		// Enable click on artist
 		genresGraph.getPaths()
 			.on( "click", onGenreClick );
+
+		if ( genresHelper && genresHelper.length != 0 ) {
+				that.highlightArtist();
+			}
 	}
 
 
@@ -119,6 +123,10 @@ function StaticTimeline ( where ) {
 			genresGraph = new StaticStreamGraph( where, genresPopularity, genresGraphTitle );
 			genresGraph.getPaths()
 				.on( "click", onGenreClick );
+
+			if ( genresHelper && genresHelper.length != 0 ) {
+				that.highlightArtist();
+			}
 
 		}
 		if ( artistsGraph ) {
@@ -198,6 +206,7 @@ function StaticTimeline ( where ) {
 
 	var highlightedGenreP2;	
 
+	var genresHelper;
 
 	this.removeHighlightArtist = function ( player ) {
 
@@ -228,8 +237,37 @@ function StaticTimeline ( where ) {
 				artistsGraph.getPaths()
 					.on( "click", onArtistClick );
 			}
+			genresHelper = [];
+
+			if ( genresGraph ) {
+				genresGraph.remove();
+				genresGraph = new StaticStreamGraph( where, genresPopularity, genresGraphTitle );
+				genresGraph.getPaths()
+					.on( "click", onGenreClick );
+			}
+
 			return;
 		}
+
+
+		var genres = [];
+		var count = 0;
+
+		for ( var i in topArtists ) {
+			var art = topArtists[ i ];
+			if 	( art.name == highlightedArtistP1 || art.name == highlightedArtistP2 ) {
+				for ( var j in art.genres ) {
+					genres.push( art.genres[ j ].name.toLowerCase() );
+				}
+				count += 1;
+			}
+			if ( count > 1 ) {
+				break;
+			}
+		}
+
+		genresHelper = genres;
+
 
 		if ( artistsGraph ) {
 			var paths = artistsGraph.getPaths();
@@ -262,7 +300,36 @@ function StaticTimeline ( where ) {
 				} );
 
 		} else if ( genresGraph ) {
-			
+
+			var paths = genresGraph.getPaths();
+
+			paths
+				.attr( "opacity", function ( d ) {
+					if ( _.contains( genres, d.key.toLowerCase() ) ) {
+						return 1;
+					}
+					return 0.07;
+				} )
+				.attr( "stroke-width", function ( d ) {
+					if ( _.contains( genres, d.key.toLowerCase() ) ) {
+						return "0.5px";
+					}
+				} )
+				.attr( "stroke", function ( d ) {
+					if ( _.contains( genres, d.key.toLowerCase() ) ) {
+						return "#000000";
+					}
+				} )
+				.on( "mouseover", null )
+				.on( "mousemove", highlightedMousemove )
+				.on( "mouseout", highlightedMouseout )
+				.on( "click", function ( d ) {
+					if ( _.contains( genres, d.key.toLowerCase() ) ) {
+						onGenreClick( d );
+					}
+					return null;
+				} );
+
 		}
 
 	}
@@ -283,6 +350,10 @@ function StaticTimeline ( where ) {
 		}
 		if ( genresGraph ) {
 			tooltip =  genresGraph.tooltip;
+			x = genresGraph.x;
+			if ( !_.contains( genresHelper, d.key.toLowerCase() ) ) {
+				return;
+			}
 		}
 
 	    mousex = d3.mouse( this );
@@ -319,6 +390,13 @@ function StaticTimeline ( where ) {
 				return;
 			}
   		}
+  		if ( genresGraph ) {
+			tooltip =  genresGraph.tooltip;
+			graph = genresGraph.getPaths();
+			if ( !_.contains( genresHelper, d.key.toLowerCase() ) ) {
+				return;
+			}
+		}
 
 	   	graph.selectAll( ".static-timeline-path" )
 	    	.transition()
