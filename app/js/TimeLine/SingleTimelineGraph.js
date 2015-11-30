@@ -123,7 +123,7 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
 
       tooltip.select( "text" )
         .attr( "y", Math.round( ypos ) )
-        .text( yyyy + " " + Math.round( selected.value ) );
+        .text( "Year: " + yyyy + "  " + "P.I.: " + Math.round( selected.value ) );
       var textWidth = tooltip.select( "text" ).node().getComputedTextLength();
       var xpos, rxpos;
       if ( mousex > width / 2 ) {

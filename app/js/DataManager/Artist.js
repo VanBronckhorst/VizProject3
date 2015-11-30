@@ -80,7 +80,6 @@ Artist.prototype.getPopularityOverTime = function () {
 };
 
 Artist.prototype.computePopularity = function () {
-
 	
 
 
@@ -92,15 +91,7 @@ Artist.prototype.computePopularity = function () {
 
 	var popularity = [];
 	var yearToPop = {};
-	for ( var i = 0, len = this.albums.length; i < len; ++i ) {
-		yearToPop[ this.albums[ i ].year ] = this.albums[ i ].popularity;
-		if ( this.albums[ i ].year > top ) {
-			top = this.albums[ i ].year;
-		}
-		if ( this.albums[ i ].year < bot ) {
-			bot = this.albums[ i ].year;
-		}
-	}
+
 
 	function weight( x ) {
 		if ( x > currentYear ) {
@@ -115,10 +106,40 @@ Artist.prototype.computePopularity = function () {
 
 
 	function smooth ( x ) {
-		var sdsq = .7;
+		var sdsq = .5;
 		// Change smoothing function for different shapes
 		return Math.exp( -x * x / sdsq );
 		// return Math.pow( x, alpha ) * Math.exp( -x * beta );
+	}
+
+
+	if ( allArtistsStatic[ this.name ] ) {
+		// Static data available
+		var staticData = allArtistsStatic[ this.name ];
+
+		for ( var i in staticData ) {
+			yearToPop[ staticData[ i ][ "year" ] ] = staticData[ i ][ "value" ]
+			if ( +staticData[ i ][ "year" ] > top ) {
+				top = +staticData[ i ][ "year" ];
+			}
+			if ( +staticData[ i ][ "year" ] < bot ) {
+				bot = +staticData[ i ][ "year" ];
+			}
+		}
+
+	} else {
+
+	
+		for ( var i = 0, len = this.albums.length; i < len; ++i ) {
+			yearToPop[ this.albums[ i ].year ] = this.albums[ i ].popularity;
+			if ( this.albums[ i ].year > top ) {
+				top = this.albums[ i ].year;
+			}
+			if ( this.albums[ i ].year < bot ) {
+				bot = this.albums[ i ].year;
+			}
+		}
+
 	}
 	// Smooth popularity
 	var smoothedPopularity = {};
@@ -142,4 +163,5 @@ Artist.prototype.computePopularity = function () {
 	this.maxActivityYear = _.min( [ top + delta, currentYear ]  );
 
 	return popularity;
+	
 };

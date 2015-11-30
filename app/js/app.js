@@ -75,6 +75,7 @@ function init() {
                         var a = data[i];
                         fl.addArtist(a,1);
                         m.addArtist(a,1);
+                        dynamicTimeline.addArtist(a,1);
                     }
                     artistsDataForGenre[genre] = data;
                 }
@@ -93,6 +94,7 @@ function init() {
                         var a = data[i];
                         fl.addArtist(a,2);
                         m.addArtist(a,2);
+                        dynamicTimeline.addArtist(a,2);
                     }
                     artistsDataForGenre[genre] = data;
                 }
@@ -149,6 +151,7 @@ function init() {
             d3.select("#suggest-list-p1").style("visibility","visible");
         } else {
             //text.text("All Genres");
+        
             auto.possibleResults(allGenresOnlyNames)
                 .selectedFunc(genreSelFunc1);
             d3.select("#genre-list-p1").style("visibility","visible");

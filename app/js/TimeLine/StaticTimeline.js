@@ -74,7 +74,7 @@ function StaticTimeline ( where ) {
 		if ( highlightedArtistP1 || highlightedArtistP2 ) {
 			that.highlightArtist();
 		}
-		if ( artistsHelper1 || artistsHelper2 ) {
+		if ( artistsHelper1 && artistsHelper1.length != 0 || artistsHelper2 && artistsHelper2.length != 0 ) {
 			that.highlightGenre();
 		}
 		if ( decade1 || decade2 ) {
@@ -118,7 +118,7 @@ function StaticTimeline ( where ) {
 		genresGraph.getPaths()
 			.on( "click", onGenreClick );
 
-		if ( genresHelper1 || genresHelper2 ) {
+		if ( genresHelper1 && genresHelper1.length != 0 || genresHelper2 && genresHelper2.length != 0 ) {
 			that.highlightArtist();
 		}
 		if ( highlightedGenreP1 || highlightedGenreP2 ) {
@@ -137,7 +137,7 @@ function StaticTimeline ( where ) {
 			genresGraph.getPaths()
 				.on( "click", onGenreClick );
 
-			if ( genresHelper1 || genresHelper2 ) {
+			if ( genresHelper1 && genresHelper1.length != 0 || genresHelper2 && genresHelper2.length != 0 ) {
 				that.highlightArtist();
 			}
 			if ( highlightedGenreP1 || highlightedGenreP2 ) {
@@ -155,7 +155,7 @@ function StaticTimeline ( where ) {
 			if ( highlightedArtistP1 || highlightedArtistP2 ) {
 				that.highlightArtist();
 			}
-			if ( artistsHelper1 || artistsHelper2 ) {
+			if ( artistsHelper1 && artistsHelper1.length != 0 || artistsHelper2 && artistsHelper2 != 0 ) {
 				that.highlightGenre();
 			}
 			if ( decade1 || decade2 ) {

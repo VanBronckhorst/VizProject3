@@ -77,6 +77,16 @@ EchoNestManager.prototype.suggestArtist = function ( s, callback, n ) {
     } );
 };
 
+EchoNestManager.prototype.suggestGenre = function ( s, callback, n ) {
+    httpGet( this.prepareURL( 'genre', 'search', { name: s, results: n ? n : 5 } ) )
+    .then( function ( d ) {
+        callback( null, d );
+    } )
+    .catch( function ( e ) {
+        callback( e );
+    } );
+};
+
 EchoNestManager.prototype.completeProfileFromId = function ( id ) {
 
     var bucket = [ 'genre', 'artist_location', 'terms', 'id:spotify' ];
