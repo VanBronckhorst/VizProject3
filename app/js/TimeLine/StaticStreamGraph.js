@@ -69,7 +69,7 @@ function StaticStreamGraph ( where, data, title ) {
   layers = layers.map( function ( d, i ) {
     return { key: d.key, values: d.values.map( function ( a ) {
       colorForGenre[a.name.toUpperCase()] = staticTimelineColors(i);
-      return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: staticTimelineColors(i) };
+      return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: staticTimelineColors(i), decade: a.decade };
     } ) };
   } );
 
@@ -83,8 +83,15 @@ function StaticStreamGraph ( where, data, title ) {
       .attr( "width", width + margin.left + margin.right )
       .attr( "height", height + margin.top + margin.bottom )
 
-  var graph = svg.append( "g" )  
-      .attr( "transform", "translate(" + margin.left + "," + 0 + ")" );
+  var main = svg
+    .append( "g" )  
+      .attr( "height", height + margin.top + margin.bottom )
+      .attr( "transform", "translate(" + margin.left + "," + ( margin.top / 2 ) + ")" );
+
+  var graph = main
+    .append( "g" )
+      .attr( "height", height )
+      .attr( "transform", "translate(" + 0 + "," + 0 + ")" );
 
   graph.selectAll( "path" )
       .data( layers )
@@ -157,9 +164,9 @@ function StaticStreamGraph ( where, data, title ) {
     .ticks( 10 )
     .outerTickSize(0);
     
-  graph.append( "g" )
+  main.append( "g" )
       .attr( "class", "timeline-x-axis" )
-      .attr( "transform", "translate(0," + height + ")" )
+      .attr( "transform", "translate(0," + ( height ) + ")" )
       .call( xAxis );
 
   var tooltip = d3.select( where ).append( "div" );

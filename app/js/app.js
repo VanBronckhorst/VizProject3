@@ -272,12 +272,12 @@ function init() {
     // Highlighted content
     var highCont =d3.select("#highlight-content-p1").on("click",function() { 
         m2.removeHighlight(1); 
-        staticTimeline.removeHighlightArtist( 1 ); 
+        staticTimeline.removeHighlight( 1 );
         highCont.text("");
     } );
     var highCont2 =d3.select("#highlight-content-p2").on("click",function() { 
         m2.removeHighlight(2);
-        staticTimeline.removeHighlightArtist( 2 );
+        staticTimeline.removeHighlight( 2 );
         highCont2.text("");
     } );
     // What to do when user press the artist/genre button in explore
@@ -288,10 +288,12 @@ function init() {
     var highGenFunc1 = function(sel) {
         m2.highlightGenre(sel,1)
         highCont.text(sel);
+        staticTimeline.highlightGenre( sel, 1 );
     }
     var highGenFunc2 = function(sel) {
         m2.highlightGenre(sel,2)
         highCont2.text(sel);
+        staticTimeline.highlightGenre( sel, 2);
     }
     var highArtFunc1 = function(sel) {
 
@@ -389,6 +391,7 @@ function init() {
 
         }
         m2.highlightArtists(toHigh,p);
+        staticTimeline.highlightDecade( dec, p );
 
 
     }
