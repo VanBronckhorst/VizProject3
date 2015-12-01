@@ -61,8 +61,8 @@ var ArtistLayer = L.Class.extend({
 
         var grad = this.defs.append("defs").append("linearGradient").attr("id", "bothMap")
             .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
-        grad.append("stop").attr("offset", "50%").style("stop-color", dynamicTimelineColorBlue);
-        grad.append("stop").attr("offset", "50%").style("stop-color", dynamicTimelineColorRed);
+        grad.append("stop").attr("offset", "50%").style("stop-color", "#779ECB");
+        grad.append("stop").attr("offset", "50%").style("stop-color", "#C23B22");
 
 
         // Assign the stroke to be of the color of the genre of the artist
