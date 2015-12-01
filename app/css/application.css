@@ -480,7 +480,7 @@ body {
 
 .decade-box{
 	position: absolute;
-	background-color: #D9853B;
+	background-color: inherit;
 	margin-top: 2%;
 	margin-bottom: 2%;
 	margin-left: 2%;
@@ -489,6 +489,10 @@ body {
 	border-radius: 2px;
 	font-size: 70%;
 	text-align: center;
+	border:solid;
+	border-width: 2;
+		border-radius: 15px;
+
 }
 
 .leaflet-control-zoom-min {

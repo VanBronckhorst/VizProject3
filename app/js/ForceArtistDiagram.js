@@ -16,6 +16,8 @@ var ForceArtistDiagram = function (where) {
 
   this.container = d3.select(where);
 
+  this.numberOfArtists = 0;
+
   this.svgW = 1000;
   this.svgH = 1000;
   this.padding = 1.5;
@@ -94,6 +96,12 @@ this.link = this.svg.selectAll(".link");
 ForceArtistDiagram.prototype.restart = function () {
   var that = this;
   //var fill = d3.scale.category20();
+
+  if(this.numberOfArtists > 50) {
+    this.svg.style("width","100%").style("height","100%")
+  .attr("viewBox","0 0 1500 1500");
+
+  }
 
   this.link = this.link.data(this.links);
 
@@ -307,6 +315,8 @@ ForceArtistDiagram.prototype.removeArtist = function(artist,p) {
 
 
 ForceArtistDiagram.prototype.addArtist = function(artist,p) {
+this.numberOfArtists++;
+
   var that = this;
 
 	var artistNode = artist;
