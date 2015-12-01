@@ -29,7 +29,7 @@ var ForceArtistDiagram = function (where) {
 
   var grad = this.defs.append("defs").append("linearGradient").attr("id", "both")
   .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
-  grad.append("stop").attr("offset", "50%").style("stop-color", "#779ECB");
+  grad.append("stop").attr("offset", "50%").style("stop-color", dynamicTimelineColorBlue);
   grad.append("stop").attr("offset", "50%").style("stop-color", "#C23B22");
 
   that.fill = d3.scale.category10();
