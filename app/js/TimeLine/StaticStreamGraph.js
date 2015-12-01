@@ -138,7 +138,7 @@ function StaticStreamGraph ( where, data, title ) {
     d3.select( this )
     .classed( "hover", true )
     .attr( "stroke", strokecolor )
-    .attr( "stroke-width", "0.5px" );
+    .attr( "stroke-width", "1px" );
 
     invertedx = 1900 + invertedx;
 

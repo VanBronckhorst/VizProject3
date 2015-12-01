@@ -142,13 +142,12 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
     }
   }
 
+  
   function mouseout ( d, i ) {
     tooltip.style( "visibility", "hidden" );
   }
 
-  function mousemove ( d, i ) {
-    tooltip.style( "visibility", "hidden" );
-  }
+
     
   var vertical = d3.select( where )
         .append( "div" )
@@ -187,9 +186,9 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
   tooltip.append( "rect" )
       .attr( "height", 20 )
       .style( "fill", "#fff" )
-      .style( "stroke-width", "1" )
+      .style( "stroke-width", "1px" )
       .style( "stroke", "black" )
-      .style( "opacity", 0.8 );
+      .style( "opacity", 1 );
   tooltip.append( "text" ) 
       .attr( "class", "tooltip-text" )
       .attr( "font-size", "2vmin" )
@@ -215,8 +214,8 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
       	.each( "end", function () {
         	// Re-enable hover
         graph.selectAll( ".timeline-path" )
-          .on( "click", mouseclick )
-          .on( "mousemove", mousemove )
+          //.on( "mouseover", mouseclick )
+          .on( "mousemove", mouseclick )
           .on( "mouseout", mouseout );
       	} );
   	}
@@ -260,19 +259,19 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
     var defs = svg.append( "defs" );
     var pattern = defs.append( "pattern" )
         .attr( "id", "mixedColorPattern" )
-        .attr( "width", "20" )
-        .attr( "height", "20" )
+        .attr( "width", "40" )
+        .attr( "height", "40" )
         .attr( "patternUnits", "userSpaceOnUse" )
         //.attr( "patternTransform", "rotate(45)");
     pattern.append( "rect" )
-        .attr( "width", "10" )
-        .attr( "height", "20" )
+        .attr( "width", "20" )
+        .attr( "height", "40" )
         .attr( "transform", "translate(0,0)")
         .attr( "fill", dynamicTimelineColorBlue )
     pattern.append( "rect" )
-        .attr( "width", "10" )
-        .attr( "height", "20" )
-        .attr( "transform", "translate(10,0)")
+        .attr( "width", "20" )
+        .attr( "height", "40" )
+        .attr( "transform", "translate(20,0)")
         .attr( "fill", dynamicTimelineColorRed );
 
 }
