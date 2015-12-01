@@ -4,7 +4,7 @@ function DynamicTimeline ( where ) {
 
 	var currentYear = 2015;
 
-	var artistsGraphTitle = "Chosen Artists";
+	var artistsGraphTitle = "Artists Timeline";
 
 	var genresGraphTitle = "Chosen Genres";
 
@@ -24,7 +24,7 @@ function DynamicTimeline ( where ) {
 			.attr( "class", "pure-button" )
 			.attr( "class", "pure-button-disabled" );
 
-	var initialTimeline = new StaticStreamGraph( where, [], "Chosen Artists Timeline" );
+	var initialTimeline = new StaticStreamGraph( where, [], artistsGraphTitle );
 
 	var visualizedArtists = {}; // artistsId -> artists
 
@@ -153,7 +153,7 @@ function DynamicTimeline ( where ) {
 		var artistTimeline;
 		var color;
 		if ( visualizedArtists[ artist.id ] ) {
-			color = "url(#mixedColor)";
+			color = "url(#mixedColorPattern)";
 			colorObject( artist, color ); 
 			bothVisArtist[ artist.id ] = true;
 		} else {
@@ -544,6 +544,9 @@ function DynamicTimeline ( where ) {
 		singleGenreGraph = new SingleTimelineGraph( where, d, color, genresGraphTitle + " - " + d.key,
 													genresGraphParams[ "start" ], genresGraphParams[ "end" ] );
 	}
+
+
+
 
 	
 }
