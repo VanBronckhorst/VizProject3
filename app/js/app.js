@@ -8,7 +8,7 @@ function init() {
     // Setting up the objects
 
     var fl = new ForceArtistDiagram("#compare-force");
-    var fl2 = new ForceArtistDiagram("#explore-force");
+    var fl2 = new ForceArtistDiagram("#explore-force","static");
     var listp1= new SelectedList("#compare-list-p1");
     var suggp1= new SuggestionList("#suggest-list-p1");
     var suggp2= new SuggestionList("#suggest-list-p2");

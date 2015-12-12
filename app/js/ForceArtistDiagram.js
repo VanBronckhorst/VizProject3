@@ -1,7 +1,7 @@
 var defaultAvatar = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Avatar_Picol_icon.svg/2000px-Avatar_Picol_icon.svg.png"
 
 
-var ForceArtistDiagram = function (where) {
+var ForceArtistDiagram = function (where,static) {
 
 	var that = this;
 
@@ -24,6 +24,10 @@ var ForceArtistDiagram = function (where) {
 
   this.svg = this.container.append("svg").style("width","100%").style("height","100%")
   .attr("viewBox","0 0 "+this.svgW+" "+this.svgH);
+
+  if (static == "static") {
+    this.svg.attr("viewBox","-1000 -1000 "+3000+" "+3000);  
+  }
 
   this.defs = this.svg.append("svg:defs");
 
