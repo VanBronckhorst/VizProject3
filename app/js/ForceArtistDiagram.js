@@ -101,11 +101,7 @@ ForceArtistDiagram.prototype.restart = function () {
   var that = this;
   //var fill = d3.scale.category20();
 
-  if(this.numberOfArtists > 50) {
-    this.svg.style("width","100%").style("height","100%")
-  .attr("viewBox","0 0 1500 1500");
 
-  }
 
   this.link = this.link.data(this.links);
 
