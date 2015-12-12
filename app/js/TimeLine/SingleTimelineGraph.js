@@ -67,8 +67,10 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
     	.attr( "width", width + margin.left + margin.right )
     	.attr( "height", height + margin.top + margin.bottom );
 
+
+
 	var graph = svg.append( "g" )  
-    	.attr( "transform", "translate(" + margin.left + "," + 0 + ")" );
+    	.attr( "transform", "translate(" + margin.left + "," + 0 + ")" )
 
 	graph.selectAll( "path" )
     	.data( layers0 )
@@ -115,13 +117,13 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
     }
 
     if ( selected != null ) {
-      d3.select( ".tooltip" ).style( "visibility", "visible" );
+      tooltip.style( "visibility", "visible" );
       var deltaY = 10;
       var ypos = mousey + ( ( mousey > height / 2 ) ? -deltaY : 4*deltaY );
 
       tooltip.select( "text" )
         .attr( "y", Math.round( ypos ) )
-        .text( yyyy + " " + Math.round( selected.value ) );
+        .text( "Year: " + yyyy + "  " + "P.I.: " + Math.round( selected.value ) );
       var textWidth = tooltip.select( "text" ).node().getComputedTextLength();
       var xpos, rxpos;
       if ( mousex > width / 2 ) {
@@ -140,13 +142,12 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
     }
   }
 
+  
   function mouseout ( d, i ) {
     tooltip.style( "visibility", "hidden" );
   }
 
-  function mousemove ( d, i ) {
-    tooltip.style( "visibility", "hidden" );
-  }
+
     
   var vertical = d3.select( where )
         .append( "div" )
@@ -185,12 +186,13 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
   tooltip.append( "rect" )
       .attr( "height", 20 )
       .style( "fill", "#fff" )
-      .style( "opacity", 0.6 );
+      .style( "stroke-width", "1px" )
+      .style( "stroke", "black" )
+      .style( "opacity", 1 );
   tooltip.append( "text" ) 
       .attr( "class", "tooltip-text" )
       .attr( "font-size", "2vmin" )
       .text( "" );
-    
 
 
 	function transition () {
@@ -202,7 +204,7 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
 	        } )
         	// Disable hover during transition
         	.on( "click", null )
-          .on( "mouvemove", null)
+          	.on( "mouvemove", null)
         	.on( "mouseout", null )
       	.transition()
         	.duration( 1000 )
@@ -212,18 +214,19 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
       	.each( "end", function () {
         	// Re-enable hover
         graph.selectAll( ".timeline-path" )
-          .on( "click", mouseclick )
-          .on( "mousemove", mousemove )
+          //.on( "mouseover", mouseclick )
+          .on( "mousemove", mouseclick )
           .on( "mouseout", mouseout );
       	} );
   	}
+
 
   	this.remove = function () {
     	svg.remove();
     	graph.remove();
     	tooltip.remove();
     	vertical.remove();
-      title.remove();
+      	title.remove();
   	};
 
   	this.getColor = function () {
@@ -252,5 +255,23 @@ function SingleTimelineGraph ( where, data, color, title, start, end ) {
 
   	// Animate timeline
   	transition();
+
+    var defs = svg.append( "defs" );
+    var pattern = defs.append( "pattern" )
+        .attr( "id", "mixedColorPattern" )
+        .attr( "width", "40" )
+        .attr( "height", "40" )
+        .attr( "patternUnits", "userSpaceOnUse" )
+        //.attr( "patternTransform", "rotate(45)");
+    pattern.append( "rect" )
+        .attr( "width", "20" )
+        .attr( "height", "40" )
+        .attr( "transform", "translate(0,0)")
+        .attr( "fill", dynamicTimelineColorBlue )
+    pattern.append( "rect" )
+        .attr( "width", "20" )
+        .attr( "height", "40" )
+        .attr( "transform", "translate(20,0)")
+        .attr( "fill", dynamicTimelineColorRed );
 
 }

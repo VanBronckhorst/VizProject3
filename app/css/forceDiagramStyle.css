@@ -10,14 +10,14 @@
 }
 
 .player1{
-	stroke: #779ECB;
+	stroke: #ABD9E9;
 	stroke-width: 8px;
-	fill: #779ECB;
+	fill: #ABD9E9;
 }
 .player2{
-	stroke: #C23B22;
+	stroke: #FEE0D2;
 	stroke-width: 8px;
-	fill:#C23B22;
+	fill:#FEE0D2;
 }
 
 .player1.player2{

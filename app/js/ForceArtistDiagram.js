@@ -16,6 +16,8 @@ var ForceArtistDiagram = function (where,static) {
 
   this.container = d3.select(where);
 
+  this.numberOfArtists = 0;
+
   this.svgW = 1000;
   this.svgH = 1000;
   this.padding = 1.5;
@@ -33,8 +35,8 @@ var ForceArtistDiagram = function (where,static) {
 
   var grad = this.defs.append("defs").append("linearGradient").attr("id", "both")
   .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
-  grad.append("stop").attr("offset", "50%").style("stop-color", "#779ECB");
-  grad.append("stop").attr("offset", "50%").style("stop-color", "#C23B22");
+  grad.append("stop").attr("offset", "50%").style("stop-color", dynamicTimelineColorBlue);
+  grad.append("stop").attr("offset", "50%").style("stop-color", dynamicTimelineColorRed);
 
   that.fill = d3.scale.category10();
 
@@ -98,6 +100,12 @@ this.link = this.svg.selectAll(".link");
 ForceArtistDiagram.prototype.restart = function () {
   var that = this;
   //var fill = d3.scale.category20();
+
+  if(this.numberOfArtists > 50) {
+    this.svg.style("width","100%").style("height","100%")
+  .attr("viewBox","0 0 1500 1500");
+
+  }
 
   this.link = this.link.data(this.links);
 
@@ -311,6 +319,8 @@ ForceArtistDiagram.prototype.removeArtist = function(artist,p) {
 
 
 ForceArtistDiagram.prototype.addArtist = function(artist,p) {
+this.numberOfArtists++;
+
   var that = this;
 
 	var artistNode = artist;

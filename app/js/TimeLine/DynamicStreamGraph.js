@@ -81,13 +81,14 @@ function DynamicStreamGraph ( where, data, title, start, end ) {
 
   var svg = d3.select( where ).append( "svg" )
       .attr( "width", width + margin.left + margin.right )
-      .attr( "height", height + margin.top + margin.bottom )
+      .attr( "height", height + margin.top + margin.bottom );
+
 
   var graph = svg.append( "g" )  
       .attr( "transform", "translate(" + margin.left + "," + 0 + ")" );
 
   graph.selectAll( "path" )
-      .data( layers0 )
+      .data( layers )
     .enter().append( "path" )
       .attr( "d", function ( d ) {
         return area( d.values );
@@ -96,7 +97,12 @@ function DynamicStreamGraph ( where, data, title, start, end ) {
       .attr( "id", function ( d ) {
         return d.key + "-timeline-path";
       } )
-      .style( "fill", function ( d, i ) { return d.values[ 0 ].color; } );
+      .style( "fill", function ( d, i ) { return d.values[ 0 ].color; } )
+      .attr( "stroke-width", "1px" )
+      .attr( "stroke", strokecolor )
+      .on( "mouseover", mouseover )
+      .on( "mousemove", mousemove )
+      .on( "mouseout", mouseout );
 
   var datearray = [];
 
@@ -128,7 +134,7 @@ function DynamicStreamGraph ( where, data, title, start, end ) {
     d3.select( this )
     .classed( "hover", true )
     .attr( "stroke", strokecolor )
-    .attr( "stroke-width", "0.5px" );
+    .attr( "stroke-width", "1px" );
 
     invertedx = 1900 + invertedx;
 
@@ -143,7 +149,7 @@ function DynamicStreamGraph ( where, data, title, start, end ) {
     .attr( "opacity", "1" );
     d3.select( this )
     .classed( "hover", false )
-    .attr( "stroke-width", "0px" );
+    //.attr( "stroke-width", "0px" );
 
     tooltip.html( "<p>" + d.key + "<br>" + pro + "</p>" ).style( "visibility", "hidden" );
   }
@@ -246,6 +252,26 @@ function DynamicStreamGraph ( where, data, title, start, end ) {
   }
 
   // Animate timeline
-  transition();
+  //transition();
+
+  var defs = svg.append( "defs" );
+  var pattern = defs.append( "pattern" )
+      .attr( "id", "mixedColorPattern" )
+      .attr( "width", "40" )
+      .attr( "height", "40" )
+      .attr( "patternUnits", "userSpaceOnUse" )
+      //.attr( "patternTransform", "rotate(45)");
+  pattern.append( "rect" )
+      .attr( "width", "20" )
+      .attr( "height", "40" )
+      .attr( "transform", "translate(0,0)")
+      .attr( "fill", dynamicTimelineColorBlue )
+  pattern.append( "rect" )
+      .attr( "width", "20" )
+      .attr( "height", "40" )
+      .attr( "transform", "translate(20,0)")
+      .attr( "fill", dynamicTimelineColorRed );
+
+
 
 }

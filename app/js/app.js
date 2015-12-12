@@ -75,6 +75,7 @@ function init() {
                         var a = data[i];
                         fl.addArtist(a,1);
                         m.addArtist(a,1);
+                        dynamicTimeline.addArtist(a,1);
                     }
                     artistsDataForGenre[genre] = data;
                 }
@@ -93,6 +94,7 @@ function init() {
                         var a = data[i];
                         fl.addArtist(a,2);
                         m.addArtist(a,2);
+                        dynamicTimeline.addArtist(a,2);
                     }
                     artistsDataForGenre[genre] = data;
                 }
@@ -149,6 +151,7 @@ function init() {
             d3.select("#suggest-list-p1").style("visibility","visible");
         } else {
             //text.text("All Genres");
+        
             auto.possibleResults(allGenresOnlyNames)
                 .selectedFunc(genreSelFunc1);
             d3.select("#genre-list-p1").style("visibility","visible");
@@ -270,8 +273,16 @@ function init() {
     }
 
     // Highlighted content
-    var highCont =d3.select("#highlight-content-p1").on("click",function() { m2.removeHighlight(1); highCont.text("")});
-    var highCont2 =d3.select("#highlight-content-p2").on("click",function() { m2.removeHighlight(2); highCont2.text("")});
+    var highCont =d3.select("#highlight-content-p1").on("click",function() { 
+        m2.removeHighlight(1); 
+        staticTimeline.removeHighlight( 1 );
+        highCont.text("");
+    } );
+    var highCont2 =d3.select("#highlight-content-p2").on("click",function() { 
+        m2.removeHighlight(2);
+        staticTimeline.removeHighlight( 2 );
+        highCont2.text("");
+    } );
     // What to do when user press the artist/genre button in explore
 
     var autoStat = new AutoCompleteBox("#explore-autocomplete-p1");
@@ -280,19 +291,23 @@ function init() {
     var highGenFunc1 = function(sel) {
         m2.highlightGenre(sel,1)
         highCont.text(sel);
+        staticTimeline.highlightGenre( sel, 1 );
     }
     var highGenFunc2 = function(sel) {
         m2.highlightGenre(sel,2)
         highCont2.text(sel);
+        staticTimeline.highlightGenre( sel, 2);
     }
     var highArtFunc1 = function(sel) {
 
         m2.highlightArtist(sel,1)
         highCont.text(sel);
+        staticTimeline.highlightArtist( sel, 1 );
     }
     var highArtFunc2 = function(sel) {
         m2.highlightArtist(sel,2)
         highCont2.text(sel);
+        staticTimeline.highlightArtist( sel, 2 );
     }
 
     autoStat.possibleResults(topArtistsNames).selectedFunc(highArtFunc1);
@@ -379,6 +394,7 @@ function init() {
 
         }
         m2.highlightArtists(toHigh,p);
+        staticTimeline.highlightDecade( dec, p );
 
 
     }

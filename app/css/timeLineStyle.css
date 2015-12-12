@@ -10,7 +10,7 @@
     font-size: 2vmin;
 }
 
-#explore-buttons-container, #compare-buttons-container {
+#explore-buttons-container, #compare-buttons-container, #mixed-pattern-container {
     position: absolute;
     top: 0;
     right: 0;
@@ -30,6 +30,13 @@
     margin-top: 40%;
 }
 
+#mixed-pattern-container:before {
+    content: "";
+    display: block;
+    margin-top: 40%;
+}
+
+
 #explore-genres-button, #compare-genres-button {
     position: absolute;
     top: 0;
@@ -40,6 +47,11 @@
     line-height: 100%;
 }
 
+#compare-genres-button {
+    top: 50%;
+    visibility: hidden;
+}
+
 #explore-artists-button, #compare-artists-button {
     position: absolute;
     top: 50%;
@@ -48,6 +60,10 @@
     text-align: center;
     vertical-align: middle;
     line-height: 100%;
+}
+
+#compare-artists-button {
+    top:0%;
 }
 
 #explore-genres-button::after {

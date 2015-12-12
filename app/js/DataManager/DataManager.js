@@ -187,6 +187,11 @@ DataManager.prototype.suggestArtist = function ( s, callback, n ) {
     this.echoNestManager.suggestArtist( s, callback, n );
 };
 
+DataManager.prototype.suggestGenre = function ( s, callback, n ) {
+	this.echoNestManager.suggestGenre( s, callback, n );
+}
+
+
 
 DataManager.prototype.similarArtists = function ( artistsId, callback) {
     

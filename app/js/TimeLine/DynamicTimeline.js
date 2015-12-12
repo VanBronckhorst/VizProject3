@@ -4,7 +4,7 @@ function DynamicTimeline ( where ) {
 
 	var currentYear = 2015;
 
-	var artistsGraphTitle = "Chosen Artists";
+	var artistsGraphTitle = "Artists Timeline";
 
 	var genresGraphTitle = "Chosen Genres";
 
@@ -24,7 +24,7 @@ function DynamicTimeline ( where ) {
 			.attr( "class", "pure-button" )
 			.attr( "class", "pure-button-disabled" );
 
-	var initialTimeline = new StaticStreamGraph( where, [], "Chosen Artists / Genres Timeline" );
+	var initialTimeline = new StaticStreamGraph( where, [], artistsGraphTitle );
 
 	var visualizedArtists = {}; // artistsId -> artists
 
@@ -153,18 +153,15 @@ function DynamicTimeline ( where ) {
 		var artistTimeline;
 		var color;
 		if ( visualizedArtists[ artist.id ] ) {
-			color = dynamicTimelineColorsMixed.shift();
-			dynamicTimelineColorsMixed.push( color );
+			color = "url(#mixedColorPattern)";
 			colorObject( artist, color ); 
 			bothVisArtist[ artist.id ] = true;
 		} else {
 			if ( player == 1 ) {
-				color = dynamicTimelineColorsBlue.shift();
-				dynamicTimelineColorsBlue.push( color );
+				color = dynamicTimelineColorBlue;
 				colorObject( artist, color);
 			} else {
-				color = dynamicTimelineColorsRed.shift();
-				dynamicTimelineColorsRed.push( color );
+				color = dynamicTimelineColorRed;
 				colorObject( artist, color);
 			}
 			bothVisArtist[ artist.id ] = false;
@@ -548,4 +545,8 @@ function DynamicTimeline ( where ) {
 													genresGraphParams[ "start" ], genresGraphParams[ "end" ] );
 	}
 
+
+
+
+	
 }

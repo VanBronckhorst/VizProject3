@@ -69,7 +69,7 @@ function StaticStreamGraph ( where, data, title ) {
   layers = layers.map( function ( d, i ) {
     return { key: d.key, values: d.values.map( function ( a ) {
       colorForGenre[a.name.toUpperCase()] = staticTimelineColors(i);
-      return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: staticTimelineColors(i) };
+      return { date: a.date, name: a.name, y: a.y, y0: a.y0, value: a.value, color: staticTimelineColors(i), decade: a.decade };
     } ) };
   } );
 
@@ -83,26 +83,36 @@ function StaticStreamGraph ( where, data, title ) {
       .attr( "width", width + margin.left + margin.right )
       .attr( "height", height + margin.top + margin.bottom )
 
-  var graph = svg.append( "g" )  
-      .attr( "transform", "translate(" + margin.left + "," + 0 + ")" );
+  var main = svg
+    .append( "g" )  
+      .attr( "height", height + margin.top + margin.bottom )
+      .attr( "transform", "translate(" + margin.left + "," + ( margin.top / 2 ) + ")" );
+
+  var graph = main
+    .append( "g" )
+      .attr( "height", height )
+      .attr( "transform", "translate(" + 0 + "," + 0 + ")" );
 
   graph.selectAll( "path" )
-      .data( layers0 )
+      .data( layers )
     .enter().append( "path" )
       .attr( "d", function ( d ) {
         return area( d.values );
       } )
-      .attr( "class", "timeline-path" )
+      .attr( "class", "static-timeline-path" )
       .attr( "id", function ( d ) {
-        return d.key + "-timeline-path";
+        return d.key + "-static-timeline-path";
       } )
-      .style( "fill", function ( d, i ) { return d.values[ 0 ].color; } );
+      .style( "fill", function ( d, i ) { return d.values[ 0 ].color; } )
+      .on( "mouseover", mouseover )
+      .on( "mousemove", mousemove )
+      .on( "mouseout", mouseout );
 
   var datearray = [];
 
   function mouseover ( d, i ) {
     
-    graph.selectAll( ".timeline-path" ).transition()
+    graph.selectAll( ".static-timeline-path" ).transition()
       .duration( 250 )
       .attr( "opacity", function ( d, j ) {
         return j != i ? 0.07 : 1;
@@ -128,7 +138,7 @@ function StaticStreamGraph ( where, data, title ) {
     d3.select( this )
     .classed( "hover", true )
     .attr( "stroke", strokecolor )
-    .attr( "stroke-width", "0.5px" );
+    .attr( "stroke-width", "1px" );
 
     invertedx = 1900 + invertedx;
 
@@ -137,7 +147,7 @@ function StaticStreamGraph ( where, data, title ) {
 
   function mouseout ( d, i ) {
 
-   graph.selectAll( ".timeline-path" )
+   graph.selectAll( ".static-timeline-path" )
     .transition()
     .duration( 250 )
     .attr( "opacity", "1" );
@@ -154,24 +164,27 @@ function StaticStreamGraph ( where, data, title ) {
     .ticks( 10 )
     .outerTickSize(0);
     
-  graph.append( "g" )
+  main.append( "g" )
       .attr( "class", "timeline-x-axis" )
-      .attr( "transform", "translate(0," + height + ")" )
+      .attr( "transform", "translate(0," + ( height ) + ")" )
       .call( xAxis );
 
-  var tooltip = d3.select( where ) 
-    .append( "div" )
-    .attr( "class", "timeline-remove" )
-    .style( "position", "absolute" )
-    .style( "z-index", "20" )
-    .style( "visibility", "hidden" )
-    .style( "pointer-events", "none" )
-    .style( "top", -10 + "px" )
-    .style( "left", width / 2 + width / 8 + "px" );
+  var tooltip = d3.select( where ).append( "div" );
+    
 
   var vertical = d3.select( where ).append( "div" );
 
   if ( data.length != 0 ) {
+
+  	tooltip
+  		.attr( "class", "timeline-remove" )
+	    .style( "position", "absolute" )
+	    .style( "z-index", "20" )
+	    .style( "visibility", "hidden" )
+	    .style( "pointer-events", "none" )
+	    .style( "top", -10 + "px" )
+	    .style( "left", width / 2 + width / 8 + "px" );
+
     vertical
         .attr( "class", "timeline-remove" )
         .style( "position", "absolute" )
@@ -201,7 +214,7 @@ function StaticStreamGraph ( where, data, title ) {
   }
 
   function transition () {
-    graph.selectAll( ".timeline-path" )
+    graph.selectAll( ".static-timeline-path" )
         .data( function () {
           var t = layers;
           layers = layers0;
@@ -217,7 +230,7 @@ function StaticStreamGraph ( where, data, title ) {
         .attr( "d", function ( d ) { return area( d.values ); } )
       .each( "end", function () {
         // Re-enable hover
-        graph.selectAll( ".timeline-path" )
+        graph.selectAll( ".static-timeline-path" )
           .on( "mouseover", mouseover )
           .on( "mousemove", mousemove )
           .on( "mouseout", mouseout );
@@ -233,10 +246,20 @@ function StaticStreamGraph ( where, data, title ) {
   };
 
   this.getPaths = function () {
-    return graph.selectAll( ".timeline-path" );
+    return graph.selectAll( ".static-timeline-path" );
   }
 
+  this.tooltip = tooltip;
+
+  this.x = x;
+
+  this.mouseover = mouseover;
+
+  this.mousemove = mousemove;
+
+  this.mouseout = mouseout;
+
   // Animate timeline
-  transition();
+  //transition();
 
 }
